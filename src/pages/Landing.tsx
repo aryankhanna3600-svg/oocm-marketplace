@@ -14,15 +14,7 @@ const CAMPAIGNS = [
     desc: 'A cultural festival designed for social media — not just the stage.',
     stats: [{ n: '50M+', l: 'social reach' }, { n: '1,200+', l: 'creators' }, { n: '10K+', l: 'attendees' }],
     color: '#f3a5bc',
-    img: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=600&h=400&fit=crop&auto=format',
-  },
-  {
-    name: 'PVR Cinemas',
-    tag: 'Influencer Marketing',
-    desc: 'Influencer campaigns driving real-world footfall across theatres.',
-    stats: [{ n: '40M+', l: 'annual reach' }, { n: '3,400+', l: 'influencers' }],
-    color: '#8fb78f',
-    img: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&h=400&fit=crop&auto=format',
+    img: '/deck-images/img-053.jpg',
   },
   {
     name: 'Swiss Beauty',
@@ -30,7 +22,7 @@ const CAMPAIGNS = [
     desc: 'Mass-creator strategy built for reach, consistency, and social dominance.',
     stats: [{ n: '23M+', l: 'Instagram reach' }, { n: '800', l: 'creators activated' }],
     color: '#f3a5bc',
-    img: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&h=400&fit=crop&auto=format',
+    img: '/deck-images/img-071.jpg',
   },
   {
     name: 'Bath & Body Works',
@@ -38,7 +30,15 @@ const CAMPAIGNS = [
     desc: 'A system that keeps delivering — month after month, not one viral hit.',
     stats: [{ n: '25M+', l: 'annual reach' }, { n: '1,000+', l: 'monthly creators' }],
     color: '#8fb78f',
-    img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=400&fit=crop&auto=format',
+    img: '/deck-images/img-093.jpg',
+  },
+  {
+    name: 'Casa Bacardi',
+    tag: 'Event Marketing',
+    desc: 'Live events captured for social — turning moments into content machines.',
+    stats: [{ n: '40M+', l: 'PVR reach' }, { n: '3,400+', l: 'influencers' }],
+    color: '#8fb78f',
+    img: '/deck-images/img-124.jpg',
   },
 ]
 
@@ -47,17 +47,74 @@ const PROCESS = [
   { n: '02', title: 'Creator Intelligence', body: 'We analyse audience match, engagement authenticity, past collaborations. Right creator over biggest creator.' },
   { n: '03', title: 'Contracting & Logistics', body: 'Negotiation, deliverables, timelines, product dispatch. You don\'t chase creators. We do.' },
   { n: '04', title: 'Content Production', body: 'Clear brief. Creators shoot. We edit. Content delivered within 72 hours — fast enough to catch trends.' },
-  { n: '05', title: 'Quality Control', body: 'Content review, caption compliance, live performance tracking, story amplification. Nothing goes live unchecked.' },
+  { n: '05', title: 'Quality Control', body: 'Content review, caption compliance, live performance tracking. Nothing goes live unchecked.' },
   { n: '06', title: 'Reporting', body: 'Reach, engagement, content performance, creator-wise results. You see what actually worked.' },
 ]
 
-const SERVICES = [
-  'Influencer Marketing',
-  'UGC Campaigns',
-  'Experiential Campaigns',
-  'Event Marketing',
-  'Brand Consultancy',
-  'Video Editing & Content Optimisation',
+const CREATOR_PERKS = [
+  {
+    icon: '💸',
+    title: 'Get paid to create',
+    body: 'Every campaign is a paying gig. No free collabs. No "exposure." Real money, direct to your UPI — within 3 days of delivery.',
+  },
+  {
+    icon: '🎯',
+    title: 'Matched to you',
+    body: 'We don\'t send you random beauty brands if you\'re a food creator. Campaigns are matched to your niche, city, and follower tier.',
+  },
+  {
+    icon: '📂',
+    title: 'Build your portfolio',
+    body: 'Every campaign adds to your verified creator profile — making the next one easier to land. Brands trust creators with a track record.',
+  },
+  {
+    icon: '🚫',
+    title: 'No minimum followers',
+    body: 'We work with nano creators (1K+) to mega influencers. What matters is your audience quality, not vanity numbers.',
+  },
+  {
+    icon: '🆓',
+    title: 'Free. Always.',
+    body: 'We take zero commission from creators. No subscription, no cut. We make money from brands — not you.',
+  },
+  {
+    icon: '📱',
+    title: 'Everything on your phone',
+    body: 'Browse campaigns, apply, submit content, track earnings — all from the OOCM app. No emails, no spreadsheets.',
+  },
+]
+
+const BRAND_PERKS = [
+  {
+    icon: '⚡',
+    title: '72H campaign go-live',
+    body: 'From brief submission to content live — 72 hours. We move faster than any agency you\'ve worked with.',
+  },
+  {
+    icon: '🔢',
+    title: '500K creator network',
+    body: 'Nano, micro, macro, and mega — across beauty, fashion, food, fitness, lifestyle, tech, and more. Every tier, every city.',
+  },
+  {
+    icon: '₹',
+    title: '₹0 commission at launch',
+    body: 'We\'re waiving platform fees for early brands. You pay creators directly — and nothing extra to us during our launch window.',
+  },
+  {
+    icon: '🛠',
+    title: 'End-to-end managed',
+    body: 'Brief writing, creator selection, contracting, dispatch, quality review, posting approval. We handle it so you don\'t have to.',
+  },
+  {
+    icon: '📊',
+    title: 'Real performance reports',
+    body: 'Per-creator reach, engagement, content performance, ROI breakdown. Not a PDF with aggregate numbers — actual transparency.',
+  },
+  {
+    icon: '🤝',
+    title: 'Verified authentic creators',
+    body: 'No fake follower farms. Every creator is vetted — engagement checked, audience authenticity verified, past work reviewed.',
+  },
 ]
 
 export default function Landing() {
@@ -98,52 +155,45 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="px-6 pt-16 pb-20 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="inline-block text-xs tracking-widest text-[#f3a5bc]/70 uppercase border border-[#f3a5bc]/20 rounded-full px-3 py-1 mb-6">
-              India's creator marketplace — coming soon
-            </span>
-            <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(2rem, 5vw, 3rem)', lineHeight: 1.1 }} className="mb-5">
-              Influencer marketing<br />
-              <span className="text-[#f3a5bc]">that actually works.</span>
-            </h1>
-            <p className="text-[#f0f0ee]/50 text-base leading-relaxed mb-8 max-w-md">
-              We've spent 5 years building a system for nano and micro creators in tier 2/3 India — and the small D2C brands that need them. Not guesswork. Not random influencer picks. A system.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button onClick={comingSoon}
-                className="relative bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2">
-                I'm a Creator
-                <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
-              </button>
-              <button onClick={comingSoon}
-                className="relative bg-[#8fb78f] text-[#0a0a0a] font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2">
-                I'm a Brand
-                <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
-              </button>
-            </div>
-          </div>
+      {/* Hero — full bleed image with overlay */}
+      <section className="relative overflow-hidden" style={{ height: 'clamp(480px, 65vh, 680px)' }}>
+        <img
+          src="/deck-images/img-127.jpg"
+          alt="Rangverse — DJ from stage with massive crowd"
+          className="absolute inset-0 w-full h-full object-cover object-top"
+        />
+        {/* dark gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/70 via-[#0a0a0a]/30 to-[#0a0a0a]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/80 to-transparent" />
 
-          {/* Hero visual — creator grid */}
-          <div className="hidden lg:grid grid-cols-2 gap-3">
-            {[
-              'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=300&h=300&fit=crop&auto=format',
-              'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=300&h=300&fit=crop&auto=format',
-              'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&auto=format',
-              'https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=300&h=300&fit=crop&auto=format',
-            ].map((src, i) => (
-              <div key={i} className={`rounded-2xl overflow-hidden aspect-square ${i === 1 ? 'mt-6' : ''} ${i === 3 ? '-mt-6' : ''}`}>
-                <img src={src} alt="" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
-              </div>
-            ))}
+        <div className="relative h-full flex flex-col justify-center px-6 max-w-6xl mx-auto">
+          <span className="inline-block text-xs tracking-widest text-[#f3a5bc]/80 uppercase border border-[#f3a5bc]/25 rounded-full px-3 py-1 mb-5 w-fit">
+            India's creator marketplace — coming soon
+          </span>
+          <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.9rem, 4.5vw, 2.9rem)', lineHeight: 1.1 }} className="mb-5 max-w-xl">
+            Influencer marketing<br />
+            <span className="text-[#f3a5bc]">that actually works.</span>
+          </h1>
+          <p className="text-[#f0f0ee]/60 text-sm leading-relaxed mb-8 max-w-md">
+            5 years building a system for nano and micro creators in tier 2/3 India — and the brands that need them. Not guesswork. A system.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 w-fit">
+            <button onClick={comingSoon}
+              className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2">
+              I'm a Creator
+              <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
+            </button>
+            <button onClick={comingSoon}
+              className="bg-[#8fb78f] text-[#0a0a0a] font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2">
+              I'm a Brand
+              <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
+            </button>
           </div>
         </div>
       </section>
 
       {/* Stats bar */}
-      <section className="border-y border-white/5 py-8 px-6">
+      <section className="border-b border-white/5 py-8 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6">
           {STATS.map(s => (
             <div key={s.label} className="text-center">
@@ -154,137 +204,179 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Why us */}
+      {/* ── FOR CREATORS section ── */}
       <section className="px-6 py-20 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="rounded-2xl overflow-hidden aspect-video">
-            <img
-              src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=800&h=450&fit=crop&auto=format"
-              alt="Team working"
-              className="w-full h-full object-cover"
-            />
+        <div className="mb-12">
+          <p className="text-xs tracking-widest text-[#f3a5bc]/60 uppercase mb-2">For Creators</p>
+          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.2 }} className="mb-3">
+            What's in it for you<br />
+            <span className="text-[#f3a5bc]">as a creator?</span>
+          </h2>
+          <p className="text-[#f0f0ee]/40 text-sm max-w-lg">
+            Stop pitching brands cold. Stop waiting months for a response. The OOCM marketplace brings the work to you.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Photo collage */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl overflow-hidden aspect-[4/5]">
+              <img src="/deck-images/img-103.jpg" alt="Creator content" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <div className="rounded-2xl overflow-hidden aspect-square">
+                <img src="/deck-images/img-104.jpg" alt="Creator at brand event" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+              <div className="rounded-2xl overflow-hidden flex-1">
+                <img src="/deck-images/img-109.jpg" alt="Fashion reel creator" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-4">Why OOCM</p>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.2 }} className="mb-6">
-              We don't do influencer<br />marketing the usual way.
+
+          {/* Perks grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {CREATOR_PERKS.map(p => (
+              <div key={p.title} className="bg-[#141414] rounded-2xl p-5 hover:bg-[#161616] transition-colors">
+                <span className="text-xl mb-3 block">{p.icon}</span>
+                <p className="font-semibold text-sm mb-1.5">{p.title}</p>
+                <p className="text-[#f0f0ee]/40 text-xs leading-relaxed">{p.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <button onClick={comingSoon}
+            className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2">
+            Join as Creator — it's free
+            <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Coming soon</span>
+          </button>
+        </div>
+      </section>
+
+      {/* ── FOR BRANDS section ── */}
+      <section className="px-6 py-20 bg-[#0d0d0d]">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-12">
+            <p className="text-xs tracking-widest text-[#8fb78f]/60 uppercase mb-2">For Brands</p>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.2 }} className="mb-3">
+              What's in it for you<br />
+              <span className="text-[#8fb78f]">as a brand?</span>
             </h2>
-            <div className="space-y-4">
-              {[
-                { title: '500,000+ creators', body: 'Consistent quality across categories — beauty, food, fitness, lifestyle, tech and more.' },
-                { title: 'Everything in one system', body: 'Creators, communication, approvals, edits — managed end to end by us.' },
-                { title: '1/10th the cost', body: 'High-quality campaigns at a fraction of building an in-house team.' },
-                { title: 'AI-powered workflows', body: 'Faster execution. Better output. Stronger reach.' },
-              ].map(item => (
-                <div key={item.title} className="flex gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#f3a5bc] mt-2 shrink-0" />
-                  <div>
-                    <p className="font-semibold text-sm mb-0.5">{item.title}</p>
-                    <p className="text-[#f0f0ee]/40 text-sm">{item.body}</p>
-                  </div>
+            <p className="text-[#f0f0ee]/40 text-sm max-w-lg">
+              No more chasing 10 agencies for quotes. No more cold DMs to creators who ghost you. One platform, end-to-end managed.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Perks grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {BRAND_PERKS.map(p => (
+                <div key={p.title} className="bg-[#141414] rounded-2xl p-5 hover:bg-[#161616] transition-colors">
+                  <span className="text-xl mb-3 block">{p.icon}</span>
+                  <p className="font-semibold text-sm mb-1.5">{p.title}</p>
+                  <p className="text-[#f0f0ee]/40 text-xs leading-relaxed">{p.body}</p>
                 </div>
               ))}
             </div>
+
+            {/* Photo collage */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-3">
+                <div className="rounded-2xl overflow-hidden aspect-square">
+                  <img src="/deck-images/img-090.jpg" alt="Beauty content" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="rounded-2xl overflow-hidden aspect-[4/3]">
+                  <img src="/deck-images/img-093.jpg" alt="Bath and Body Works UGC" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                </div>
+              </div>
+              <div className="rounded-2xl overflow-hidden aspect-[4/5]">
+                <img src="/deck-images/img-111.jpg" alt="Creators at brand event" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <button onClick={comingSoon}
+              className="bg-[#8fb78f] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2">
+              Post a Campaign
+              <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Coming soon</span>
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Campaigns */}
-      <section className="px-6 py-16 bg-[#0d0d0d]">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-2">Our work</p>
-              <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem' }}>
-                Not promises.<br />Actual results.
-              </h2>
-            </div>
+      {/* Our Work / Case Studies */}
+      <section className="px-6 py-20 max-w-6xl mx-auto">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-2">Our work</p>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem' }}>
+              Not promises.<br />Actual results.
+            </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {CAMPAIGNS.map(c => (
-              <div key={c.name} className="bg-[#141414] rounded-2xl overflow-hidden group">
-                <div className="aspect-video overflow-hidden">
-                  <img src={c.img} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {CAMPAIGNS.map(c => (
+            <div key={c.name} className="bg-[#141414] rounded-2xl overflow-hidden group">
+              <div className="aspect-video overflow-hidden">
+                <img src={c.img} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+              </div>
+              <div className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: c.color + '20', color: c.color }}>{c.tag}</span>
+                  <span className="font-semibold text-sm">{c.name}</span>
                 </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: c.color + '20', color: c.color }}>{c.tag}</span>
-                    <span className="font-semibold text-sm">{c.name}</span>
-                  </div>
-                  <p className="text-[#f0f0ee]/40 text-xs leading-relaxed mb-4">{c.desc}</p>
-                  <div className="flex gap-4">
-                    {c.stats.map(s => (
-                      <div key={s.l}>
-                        <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: c.color }} className="text-lg">{s.n}</p>
-                        <p className="text-[#f0f0ee]/30 text-xs">{s.l}</p>
-                      </div>
-                    ))}
-                  </div>
+                <p className="text-[#f0f0ee]/40 text-xs leading-relaxed mb-4">{c.desc}</p>
+                <div className="flex gap-4">
+                  {c.stats.map(s => (
+                    <div key={s.l}>
+                      <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: c.color }} className="text-lg">{s.n}</p>
+                      <p className="text-[#f0f0ee]/30 text-xs">{s.l}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* Process */}
-      <section className="px-6 py-20 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-2">How we work</p>
-          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem' }}>
-            Clear process. Clear timelines.<br />
-            <span className="text-[#f0f0ee]/30">Consistent results.</span>
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {PROCESS.map(p => (
-            <div key={p.n} className="bg-[#141414] rounded-2xl p-5 hover:bg-[#161616] transition-colors">
-              <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-3xl text-[#f3a5bc]/20 mb-3">{p.n}</p>
-              <p className="font-semibold text-sm mb-2">{p.title}</p>
-              <p className="text-[#f0f0ee]/40 text-xs leading-relaxed">{p.body}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-6 bg-[#141414] rounded-2xl p-5 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-6 flex-wrap">
-            {['Day 1', 'Day 2–3', 'Day 4–7', 'Day 7–10', 'Post campaign'].map((d, i, arr) => (
-              <div key={d} className="flex items-center gap-3">
-                <span className="text-xs text-[#f0f0ee]/40">{d}</span>
-                {i < arr.length - 1 && <span className="text-[#f0f0ee]/15 text-xs">→</span>}
+      <section className="px-6 py-20 bg-[#0d0d0d]">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-2">How we work</p>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem' }}>
+              Clear process. Clear timelines.<br />
+              <span className="text-[#f0f0ee]/30">Consistent results.</span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {PROCESS.map(p => (
+              <div key={p.n} className="bg-[#141414] rounded-2xl p-5 hover:bg-[#181818] transition-colors">
+                <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-3xl text-[#f3a5bc]/20 mb-3">{p.n}</p>
+                <p className="font-semibold text-sm mb-2">{p.title}</p>
+                <p className="text-[#f0f0ee]/40 text-xs leading-relaxed">{p.body}</p>
               </div>
             ))}
           </div>
-          <span className="text-xs text-[#8fb78f]">Simple. Fast. Reliable.</span>
         </div>
       </section>
 
-      {/* Services */}
-      <section className="px-6 py-16 bg-[#0d0d0d]">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-2">What we do</p>
-              <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem' }} className="mb-6">
-                Everything designed<br />for brands that want<br />
-                <span className="text-[#f3a5bc]">visibility — not just content.</span>
-              </h2>
-              <div className="grid grid-cols-1 gap-2">
-                {SERVICES.map(s => (
-                  <div key={s} className="flex items-center gap-3 py-3 border-b border-white/5">
-                    <div className="w-1 h-1 rounded-full bg-[#f3a5bc]" />
-                    <span className="text-sm text-[#f0f0ee]/70">{s}</span>
-                  </div>
-                ))}
-              </div>
+      {/* Event / atmosphere strip */}
+      <section className="py-6 overflow-hidden">
+        <div className="flex gap-4 px-6">
+          {[
+            { src: '/deck-images/img-120.jpg', alt: 'Rangverse event collage' },
+            { src: '/deck-images/img-130.jpg', alt: 'Concert with red lights' },
+            { src: '/deck-images/img-121.jpg', alt: 'Casa Bacardi concert' },
+            { src: '/deck-images/img-056.jpg', alt: 'DJ event pink blue lights' },
+          ].map((img, i) => (
+            <div key={i} className="rounded-2xl overflow-hidden shrink-0 w-64 aspect-video">
+              <img src={img.src} alt={img.alt} className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-300" />
             </div>
-            <div className="rounded-2xl overflow-hidden">
-              <img
-                src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600&h=700&fit=crop&auto=format"
-                alt="Content creation"
-                className="w-full h-full object-cover rounded-2xl"
-              />
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -300,12 +392,14 @@ export default function Landing() {
           </div>
           <div className="flex flex-col gap-3 shrink-0">
             <button onClick={comingSoon}
-              className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all whitespace-nowrap">
+              className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all whitespace-nowrap flex items-center gap-2">
               Join as Creator →
+              <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
             </button>
             <button onClick={comingSoon}
-              className="bg-[#141414] border border-white/10 text-[#f0f0ee]/70 font-semibold px-8 py-3 rounded-xl text-sm hover:border-[#8fb78f]/40 hover:text-[#8fb78f] transition-all whitespace-nowrap">
+              className="bg-[#141414] border border-white/10 text-[#f0f0ee]/70 font-semibold px-8 py-3 rounded-xl text-sm hover:border-[#8fb78f]/40 hover:text-[#8fb78f] transition-all whitespace-nowrap flex items-center gap-2">
               Post a Campaign →
+              <span className="border border-[#8fb78f]/30 text-[#8fb78f]/60 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
             </button>
           </div>
         </div>
