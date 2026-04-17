@@ -7,52 +7,6 @@ const STATS = [
   { value: '₹0', label: 'Commission at launch' },
 ]
 
-const CAMPAIGNS = [
-  {
-    name: 'Rangverse',
-    tag: 'Experiential',
-    desc: 'A cultural festival designed for social media — not just the stage.',
-    stats: [{ n: '50M+', l: 'social reach' }, { n: '1,200+', l: 'creators' }, { n: '10K+', l: 'attendees' }],
-    color: '#f3a5bc',
-    img: '/deck-images/img-053.jpg',
-  },
-  {
-    name: 'Swiss Beauty',
-    tag: 'UGC Campaign',
-    desc: 'Mass-creator strategy built for reach, consistency, and social dominance.',
-    stats: [{ n: '23M+', l: 'Instagram reach' }, { n: '800', l: 'creators activated' }],
-    color: '#f3a5bc',
-    img: null,
-    gradient: 'linear-gradient(135deg, #f3a5bc15 0%, #0a0a0a 100%)',
-  },
-  {
-    name: 'Bath & Body Works',
-    tag: 'Monthly Campaigns',
-    desc: 'A system that keeps delivering — month after month, not one viral hit.',
-    stats: [{ n: '25M+', l: 'annual reach' }, { n: '1,000+', l: 'monthly creators' }],
-    color: '#8fb78f',
-    img: null,
-    gradient: 'linear-gradient(135deg, #8fb78f15 0%, #0a0a0a 100%)',
-  },
-  {
-    name: 'Casa Bacardi × Infamous',
-    tag: 'Event Marketing',
-    desc: 'Live events captured for social — turning moments into content machines.',
-    stats: [{ n: '40M+', l: 'PVR reach' }, { n: '3,400+', l: 'influencers' }],
-    color: '#8fb78f',
-    img: '/deck-images/img-120.jpg',
-  },
-]
-
-const PROCESS = [
-  { n: '01', title: 'Strategy & Alignment', body: 'Brand goals, target audience, platform selection, campaign objective. No confusion. No wasted budget.' },
-  { n: '02', title: 'Creator Matching', body: 'We analyse audience match, engagement authenticity, past collaborations. Right creator over biggest creator.' },
-  { n: '03', title: 'Contracting & Logistics', body: 'Brief, deliverables, timelines, product dispatch. You don\'t chase creators. We do.' },
-  { n: '04', title: 'Content Production', body: 'Creators shoot. We review. Content delivered fast enough to catch trends.' },
-  { n: '05', title: 'Quality Control', body: 'Content review, caption compliance, live performance tracking. Nothing goes live unchecked.' },
-  { n: '06', title: 'Reporting', body: 'Reach, engagement, content performance, creator-wise results. You see what actually worked.' },
-]
-
 const CREATOR_PERKS = [
   {
     icon: '⚡',
@@ -362,65 +316,103 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── CASE STUDIES ── */}
+      {/* ── WORK — two HD images, stats overlaid ── */}
       <section className="px-6 py-20 bg-[#0d0d0d]">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-10">
-            <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-2">Our work</p>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem' }}>
-              Not promises.<br />Actual results.
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {CAMPAIGNS.map(c => (
-              <div key={c.name} className="bg-[#141414] rounded-2xl overflow-hidden group">
-                <div className="aspect-video overflow-hidden">
-                  {c.img ? (
-                    <img src={c.img} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center" style={{ background: (c as any).gradient }}>
-                      <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 900, fontSize: '3rem', color: c.color, opacity: 0.2 }}>{c.name.charAt(0)}</span>
+          <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-10">Some of what we've done</p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+            {/* Card 1 — Rangverse Holi */}
+            <div className="relative rounded-2xl overflow-hidden group" style={{ minHeight: '420px' }}>
+              <img src="/deck-images/img-053.jpg" alt="Rangverse" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
+              <div className="relative h-full flex flex-col justify-end p-7" style={{ minHeight: '420px' }}>
+                <span className="text-xs tracking-widest text-[#f3a5bc]/80 uppercase mb-2">Experiential</span>
+                <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.8rem', lineHeight: 1.1 }} className="mb-4">Rangverse</h3>
+                <div className="flex gap-6">
+                  {[{ n: '50M+', l: 'social reach' }, { n: '1,200+', l: 'creators' }, { n: '10K+', l: 'attendees' }].map(s => (
+                    <div key={s.l}>
+                      <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: '#f3a5bc' }} className="text-xl">{s.n}</p>
+                      <p className="text-[#f0f0ee]/40 text-xs">{s.l}</p>
                     </div>
-                  )}
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: c.color + '20', color: c.color }}>{c.tag}</span>
-                    <span className="font-semibold text-sm">{c.name}</span>
-                  </div>
-                  <p className="text-[#f0f0ee]/40 text-xs leading-relaxed mb-4">{c.desc}</p>
-                  <div className="flex gap-4">
-                    {c.stats.map(s => (
-                      <div key={s.l}>
-                        <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: c.color }} className="text-lg">{s.n}</p>
-                        <p className="text-[#f0f0ee]/30 text-xs">{s.l}</p>
-                      </div>
-                    ))}
-                  </div>
+                  ))}
                 </div>
               </div>
+            </div>
+
+            {/* Card 2 — Events collage */}
+            <div className="relative rounded-2xl overflow-hidden group" style={{ minHeight: '420px' }}>
+              <img src="/deck-images/img-120.jpg" alt="Events" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent" />
+              <div className="relative h-full flex flex-col justify-end p-7" style={{ minHeight: '420px' }}>
+                <span className="text-xs tracking-widest text-[#8fb78f]/80 uppercase mb-2">Event Marketing</span>
+                <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '1.8rem', lineHeight: 1.1 }} className="mb-4">Live Events → Content</h3>
+                <div className="flex gap-6">
+                  {[{ n: '40M+', l: 'annual reach' }, { n: '3,400+', l: 'influencers' }].map(s => (
+                    <div key={s.l}>
+                      <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: '#8fb78f' }} className="text-xl">{s.n}</p>
+                      <p className="text-[#f0f0ee]/40 text-xs">{s.l}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Brand names strip */}
+          <div className="mt-6 flex flex-wrap gap-3">
+            {['Swiss Beauty', 'Bath & Body Works', 'PVR Cinemas', 'Casa Bacardi', 'Infamous', 'Rangverse', 'Michael Kors'].map(b => (
+              <span key={b} className="text-xs text-[#f0f0ee]/30 border border-white/5 px-3 py-1.5 rounded-full">{b}</span>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── PROCESS ── */}
+      {/* ── HOW IT ACTUALLY WORKS ── */}
       <section className="px-6 py-20 max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-2">How we work</p>
-          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem' }}>
-            Clear process. Clear timelines.<br />
-            <span className="text-[#f0f0ee]/30">Consistent results.</span>
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {PROCESS.map(p => (
-            <div key={p.n} className="bg-[#141414] rounded-2xl p-5 hover:bg-[#181818] transition-colors">
-              <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-3xl text-[#f3a5bc]/20 mb-3">{p.n}</p>
-              <p className="font-semibold text-sm mb-2">{p.title}</p>
-              <p className="text-[#f0f0ee]/40 text-xs leading-relaxed">{p.body}</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-4">How it works</p>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.2 }} className="mb-8">
+              Honestly, it's<br />
+              <span className="text-[#f3a5bc]">embarrassingly simple.</span>
+            </h2>
+            <div className="space-y-6">
+              {[
+                { step: '1', who: 'Brand', action: 'Posts a brief on OOCM. Takes 5 minutes. Describes the product, deliverable, budget or barter offer.' },
+                { step: '2', who: 'Creators', action: 'See it instantly. The ones who match — by niche, city, tier — apply. Most brands get applications within minutes.' },
+                { step: '3', who: 'Brand', action: 'Scrolls through applicants. Shortlists who they want. Done in under an hour. No back-and-forth, no email chains.' },
+                { step: '4', who: 'Content', action: 'Goes live. Creator posts. Brand gets reach. Barter or cash — settled in 3 days.' },
+              ].map(s => (
+                <div key={s.step} className="flex gap-4">
+                  <div className="w-8 h-8 rounded-full border border-[#f3a5bc]/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="text-xs text-[#f3a5bc]/60 font-semibold">{s.step}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-[#f3a5bc]/60 uppercase tracking-wider font-semibold">{s.who}</span>
+                    <p className="text-sm text-[#f0f0ee]/60 leading-relaxed mt-0.5">{s.action}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Right side — punchy stats */}
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { value: '5 min', label: 'to post a brief', color: '#f3a5bc' },
+              { value: '<1 hr', label: 'to shortlist creators', color: '#8fb78f' },
+              { value: '3 days', label: 'payment after content goes live', color: '#f3a5bc' },
+              { value: '₹0', label: 'platform fee at launch', color: '#8fb78f' },
+            ].map(s => (
+              <div key={s.label} className="bg-[#141414] rounded-2xl p-6 flex flex-col gap-2">
+                <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '2rem', color: s.color, lineHeight: 1 }}>{s.value}</p>
+                <p className="text-[#f0f0ee]/35 text-xs leading-snug">{s.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
