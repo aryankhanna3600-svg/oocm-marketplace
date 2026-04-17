@@ -10,6 +10,8 @@ export interface CampaignFilters {
   page?: number
 }
 
+export const getMyWork = () => client.get('/marketplace/creator/my-campaigns')
+
 export const getCampaigns = (filters: CampaignFilters = {}) => {
   const params = new URLSearchParams()
   if (filters.category) params.set('category', filters.category)
