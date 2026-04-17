@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const STATS = [
   { value: '500K+', label: 'Creators across India' },
@@ -74,6 +75,7 @@ const BRAND_PERKS = [
 ]
 
 export default function Landing() {
+  const navigate = useNavigate()
   const [toast, setToast] = useState(false)
 
   const comingSoon = () => {
@@ -104,7 +106,7 @@ export default function Landing() {
             className="text-xs text-[#f0f0ee]/40 hover:text-[#f0f0ee]/70 transition-colors hidden sm:block">
             Team
           </a>
-          <button onClick={comingSoon}
+          <button onClick={() => navigate('/creator/signup')}
             className="text-xs bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-4 py-2 rounded-full hover:brightness-105 transition-all">
             Get started
           </button>
@@ -162,10 +164,9 @@ export default function Landing() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <button onClick={comingSoon}
+            <button onClick={() => navigate('/creator/signup')}
               className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2 w-fit">
-              I'm a Creator
-              <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
+              I'm a Creator →
             </button>
             <button onClick={comingSoon}
               className="bg-[#8fb78f] text-[#0a0a0a] font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2 w-fit">
@@ -275,10 +276,9 @@ export default function Landing() {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <button onClick={comingSoon}
+            <button onClick={() => navigate('/creator/signup')}
               className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2">
-              Join as Creator — it's free
-              <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Coming soon</span>
+              Join as Creator — it's free →
             </button>
           </div>
         </div>
@@ -434,10 +434,9 @@ export default function Landing() {
               <p className="text-[#f0f0ee]/40 text-sm">Be among the first creators and brands on the platform.</p>
             </div>
             <div className="flex flex-col gap-3 shrink-0 relative z-10">
-              <button onClick={comingSoon}
-                className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all whitespace-nowrap flex items-center gap-2">
+              <button onClick={() => navigate('/creator/signup')}
+                className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all whitespace-nowrap">
                 Join as Creator →
-                <span className="bg-[#0a0a0a]/15 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
               </button>
               <button onClick={comingSoon}
                 className="bg-[#141414] border border-white/10 text-[#f0f0ee]/70 font-semibold px-8 py-3 rounded-xl text-sm hover:border-[#8fb78f]/40 hover:text-[#8fb78f] transition-all whitespace-nowrap flex items-center gap-2">
