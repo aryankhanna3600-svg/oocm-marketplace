@@ -5,6 +5,7 @@ import Landing from './pages/Landing'
 import CreatorSignup from './pages/creator/Signup'
 import CreatorHome from './pages/creator/Home'
 import CreatorCampaigns from './pages/creator/Campaigns'
+import CampaignDetail from './pages/creator/CampaignDetail'
 import CreatorMyWork from './pages/creator/MyWork'
 import CreatorProfile from './pages/creator/Profile'
 
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/creator/signup" element={<CreatorSignup />} />
           <Route path="/creator/home" element={<CreatorHome />} />
           <Route path="/creator/campaigns" element={<CreatorCampaigns />} />
+          <Route path="/creator/campaign/:id" element={<CampaignDetail />} />
           <Route path="/creator/my-work" element={<CreatorMyWork />} />
           <Route path="/creator/profile" element={<CreatorProfile />} />
         </Route>
