@@ -22,7 +22,8 @@ const CAMPAIGNS = [
     desc: 'Mass-creator strategy built for reach, consistency, and social dominance.',
     stats: [{ n: '23M+', l: 'Instagram reach' }, { n: '800', l: 'creators activated' }],
     color: '#f3a5bc',
-    img: '/deck-images/img-071.jpg',
+    img: null,
+    gradient: 'linear-gradient(135deg, #f3a5bc15 0%, #0a0a0a 100%)',
   },
   {
     name: 'Bath & Body Works',
@@ -30,15 +31,16 @@ const CAMPAIGNS = [
     desc: 'A system that keeps delivering — month after month, not one viral hit.',
     stats: [{ n: '25M+', l: 'annual reach' }, { n: '1,000+', l: 'monthly creators' }],
     color: '#8fb78f',
-    img: '/deck-images/img-093.jpg',
+    img: null,
+    gradient: 'linear-gradient(135deg, #8fb78f15 0%, #0a0a0a 100%)',
   },
   {
-    name: 'Casa Bacardi',
+    name: 'Casa Bacardi × Infamous',
     tag: 'Event Marketing',
     desc: 'Live events captured for social — turning moments into content machines.',
     stats: [{ n: '40M+', l: 'PVR reach' }, { n: '3,400+', l: 'influencers' }],
     color: '#8fb78f',
-    img: '/deck-images/img-124.jpg',
+    img: '/deck-images/img-120.jpg',
   },
 ]
 
@@ -158,9 +160,9 @@ export default function Landing() {
       {/* Hero — full bleed image with overlay */}
       <section className="relative overflow-hidden" style={{ height: 'clamp(480px, 65vh, 680px)' }}>
         <img
-          src="/deck-images/img-127.jpg"
-          alt="Rangverse — DJ from stage with massive crowd"
-          className="absolute inset-0 w-full h-full object-cover object-top"
+          src="/deck-images/img-056.jpg"
+          alt="Live event — DJ with crowd"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
         {/* dark gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/70 via-[#0a0a0a]/30 to-[#0a0a0a]" />
@@ -282,19 +284,9 @@ export default function Landing() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {/* Photo collage */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-2xl overflow-hidden aspect-[4/5]">
-              <img src="/deck-images/img-103.jpg" alt="Creator content" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="rounded-2xl overflow-hidden aspect-square">
-                <img src="/deck-images/img-104.jpg" alt="Creator at brand event" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-              <div className="rounded-2xl overflow-hidden flex-1">
-                <img src="/deck-images/img-109.jpg" alt="Fashion reel creator" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            </div>
+          {/* Single HD photo */}
+          <div className="rounded-2xl overflow-hidden aspect-[4/3]">
+            <img src="/deck-images/img-090.jpg" alt="Creator" className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
           </div>
 
           {/* Perks grid */}
@@ -332,32 +324,14 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            {/* Perks grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {BRAND_PERKS.map(p => (
-                <div key={p.title} className="bg-[#141414] rounded-2xl p-5 hover:bg-[#161616] transition-colors">
-                  <span className="text-xl mb-3 block">{p.icon}</span>
-                  <p className="font-semibold text-sm mb-1.5">{p.title}</p>
-                  <p className="text-[#f0f0ee]/40 text-xs leading-relaxed">{p.body}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Photo collage */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-3">
-                <div className="rounded-2xl overflow-hidden aspect-square">
-                  <img src="/deck-images/img-090.jpg" alt="Beauty content" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="rounded-2xl overflow-hidden aspect-[4/3]">
-                  <img src="/deck-images/img-093.jpg" alt="Bath and Body Works UGC" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {BRAND_PERKS.map(p => (
+              <div key={p.title} className="bg-[#141414] rounded-2xl p-5 hover:bg-[#161616] transition-colors">
+                <span className="text-xl mb-3 block">{p.icon}</span>
+                <p className="font-semibold text-sm mb-1.5">{p.title}</p>
+                <p className="text-[#f0f0ee]/40 text-xs leading-relaxed">{p.body}</p>
               </div>
-              <div className="rounded-2xl overflow-hidden aspect-[4/5]">
-                <img src="/deck-images/img-111.jpg" alt="Creators at brand event" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            </div>
+            ))}
           </div>
 
           <div className="mt-8 flex justify-center">
@@ -384,7 +358,13 @@ export default function Landing() {
           {CAMPAIGNS.map(c => (
             <div key={c.name} className="bg-[#141414] rounded-2xl overflow-hidden group">
               <div className="aspect-video overflow-hidden">
-                <img src={c.img} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+                {c.img ? (
+                  <img src={c.img} alt={c.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center" style={{ background: (c as any).gradient }}>
+                    <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: '2rem', color: c.color, opacity: 0.3 }}>{c.name.charAt(0)}</span>
+                  </div>
+                )}
               </div>
               <div className="p-5">
                 <div className="flex items-center gap-2 mb-3">
@@ -425,22 +405,6 @@ export default function Landing() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Event / atmosphere strip */}
-      <section className="py-6 overflow-hidden">
-        <div className="flex gap-4 px-6">
-          {[
-            { src: '/deck-images/img-120.jpg', alt: 'Rangverse event collage' },
-            { src: '/deck-images/img-130.jpg', alt: 'Concert with red lights' },
-            { src: '/deck-images/img-121.jpg', alt: 'Casa Bacardi concert' },
-            { src: '/deck-images/img-056.jpg', alt: 'DJ event pink blue lights' },
-          ].map((img, i) => (
-            <div key={i} className="rounded-2xl overflow-hidden shrink-0 w-64 aspect-video">
-              <img src={img.src} alt={img.alt} className="w-full h-full object-cover opacity-70 hover:opacity-100 transition-opacity duration-300" />
-            </div>
-          ))}
         </div>
       </section>
 
