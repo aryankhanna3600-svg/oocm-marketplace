@@ -204,6 +204,70 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── CREATOR SHOWCASE ── */}
+      <section className="px-6 py-20 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Copy */}
+          <div>
+            <p className="text-xs tracking-widest text-[#f3a5bc]/60 uppercase mb-3">Real creators. Real results.</p>
+            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.2 }} className="mb-4">
+              Thousands of creators<br />
+              <span className="text-[#f3a5bc]">have already worked with us.</span>
+            </h2>
+            <p className="text-[#f0f0ee]/45 text-sm leading-relaxed mb-6">
+              Every post tagged <span className="text-[#f3a5bc]">#modacreator</span> is a creator we briefed, paid, and worked with — from beauty reels to fashion lookbooks to product unboxings. No fake numbers. Just content that went live.
+            </p>
+            <p className="text-[#f0f0ee]/35 text-sm mb-8">
+              Go see for yourself →{' '}
+              <a href="https://www.instagram.com/explore/tags/modacreator/" target="_blank" rel="noreferrer"
+                className="text-[#f3a5bc] hover:underline">
+                #modacreator on Instagram
+              </a>
+            </p>
+
+            {/* Reel links */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-6">
+              {[
+                { url: 'https://www.instagram.com/reel/DAdrAvuqzX-/', label: 'Reel ↗' },
+                { url: 'https://www.instagram.com/reel/C7zIkq0SgHw/', label: 'Reel ↗' },
+                { url: 'https://www.instagram.com/reel/CySd-9nPrQa/', label: 'Reel ↗' },
+                { url: 'https://www.instagram.com/p/CnrNlPOpNKS/', label: 'Post ↗' },
+                { url: 'https://www.instagram.com/reel/C-dQScQxzA8/', label: 'Reel ↗' },
+                { url: 'https://www.instagram.com/reel/CmlemmiJ4-z/', label: 'Reel ↗' },
+                { url: 'https://www.instagram.com/reel/C89CaRqx7UH/', label: 'Reel ↗' },
+              ].map((r, i) => (
+                <a key={i} href={r.url} target="_blank" rel="noreferrer"
+                  className="flex items-center gap-1.5 bg-[#141414] hover:bg-[#1a1a1a] border border-white/5 hover:border-[#f3a5bc]/20 rounded-xl px-3 py-2.5 transition-all group">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-[#f3a5bc] shrink-0">
+                    <polygon points="5,3 19,12 5,21" fill="currentColor"/>
+                  </svg>
+                  <span className="text-xs text-[#f0f0ee]/50 group-hover:text-[#f0f0ee]/80 transition-colors">Creator {i + 1}</span>
+                </a>
+              ))}
+            </div>
+
+            <a href="https://www.instagram.com/outofcontextmarketing" target="_blank" rel="noreferrer"
+              className="inline-flex items-center gap-2 border border-[#f3a5bc]/30 text-[#f3a5bc] text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-[#f3a5bc]/5 transition-all">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+              @outofcontextmarketing
+            </a>
+          </div>
+
+          {/* Phone mockup screenshots */}
+          <div className="flex gap-4 justify-center lg:justify-end">
+            {['/deck-images/modacreator-1.jpg', '/deck-images/modacreator-2.jpg'].map((src, i) => (
+              <div key={i} className={`w-[155px] sm:w-[165px] rounded-[2rem] overflow-hidden border-2 border-white/10 shadow-2xl shrink-0 ${i === 1 ? 'mt-8' : ''}`}>
+                <img src={src} alt={`#modacreator creators screenshot ${i + 1}`} className="w-full h-auto" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── FOR CREATORS section ── */}
       <section className="px-6 py-20 max-w-6xl mx-auto">
         <div className="mb-12">
