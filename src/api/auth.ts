@@ -16,7 +16,14 @@ export const completeSignup = (data: {
   last_name: string
   city: string
   state: string
-  instagram_username?: string
+  username: string
+  password: string
   content_categories: string[]
   follower_range: string
 }) => client.post('/auth/creator/complete-signup', data)
+
+export const checkUsername = (username: string) =>
+  client.get(`/auth/creator/check-username?username=${encodeURIComponent(username)}`)
+
+export const loginWithPassword = (username: string, password: string) =>
+  client.post('/auth/creator/login-password', { username, password })

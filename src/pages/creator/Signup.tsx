@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { completeSignup } from '../../api/auth'
+import { completeSignup, checkUsername } from '../../api/auth'
 
 const INDIAN_STATES = [
   'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat',
@@ -36,10 +36,13 @@ export default function CreatorSignup() {
   const [step, setStep] = useState(1)
   const [form, setForm] = useState({
     first_name: '', last_name: '', city: '', state: '',
-    instagram_username: '',
+    username: '', password: '', confirmPassword: '',
     content_categories: [] as string[],
     follower_range: '',
   })
+  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle')
+  const [showPassword, setShowPassword] = useState(false)
+  const usernameTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const [submitting, setSubmitting] = useState(false)
   const [countdown, setCountdown] = useState(30)
   const [msgIdx, setMsgIdx] = useState(0)
@@ -69,7 +72,8 @@ export default function CreatorSignup() {
     if (!form.follower_range) return err('Select your follower range.')
     setError(''); setSubmitting(true); doneRef.current = false
     try {
-      const res = await completeSignup({ phone, email, ...form })
+      const { confirmPassword: _, ...submitForm } = form
+      const res = await completeSignup({ phone, email, ...submitForm })
       doneRef.current = true
       localStorage.setItem('oocm_token', res.data.token)
       localStorage.setItem('oocm_role', 'creator')
@@ -81,6 +85,21 @@ export default function CreatorSignup() {
       const msg = e.response?.data?.message
       err(msg ?? `${e.message || 'Network error'} — please try again.`)
     }
+  }
+
+  const handleUsernameChange = (val: string) => {
+    const clean = val.toLowerCase().replace(/[^a-z0-9._]/g, '')
+    setForm(f => ({ ...f, username: clean }))
+    clearTimeout(usernameTimer.current)
+    if (!clean || clean.length < 3) { setUsernameStatus(clean ? 'invalid' : 'idle'); return }
+    if (!/^[a-z0-9._]{3,30}$/.test(clean)) { setUsernameStatus('invalid'); return }
+    setUsernameStatus('checking')
+    usernameTimer.current = setTimeout(async () => {
+      try {
+        const res = await checkUsername(clean)
+        setUsernameStatus(res.data.available ? 'available' : 'taken')
+      } catch { setUsernameStatus('idle') }
+    }, 500)
   }
 
   const toggleCategory = (cat: string) =>
@@ -191,34 +210,69 @@ export default function CreatorSignup() {
           </div>
         )}
 
-        {/* Step 2: Social handles */}
+        {/* Step 2: Username + Password */}
         {step === 2 && (
           <div>
-            <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-2xl mb-2">Your social handles</h1>
-            <p className="text-[#f0f0ee]/40 text-sm mb-6">Add what you have — brands use this to find you.</p>
+            <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-2xl mb-2">Create your identity</h1>
+            <p className="text-[#f0f0ee]/40 text-sm mb-6">Your username is how brands find you. Your password lets you sign in anytime.</p>
             <div className="space-y-3">
-              {[
-                { k: 'instagram_username', label: 'Instagram', prefix: '@', placeholder: 'yourhandle', color: '#E1306C' },
-              ].map(s => (
-                <div key={s.k} className="flex gap-2">
-                  <span className="bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm shrink-0" style={{ color: s.color }}>{s.prefix}</span>
+              <div>
+                <div className="flex gap-2">
+                  <span className="bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f0f0ee]/40 shrink-0">@</span>
                   <input
-                    value={(form as any)[s.k]}
-                    onChange={e => setForm(f => ({ ...f, [s.k]: e.target.value.replace('@', '') }))}
-                    placeholder={s.placeholder}
-                    className="flex-1 bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc]"
+                    value={form.username}
+                    onChange={e => handleUsernameChange(e.target.value)}
+                    placeholder="yourname"
+                    maxLength={30}
+                    className={`flex-1 bg-[#141414] border rounded-xl px-4 py-3 text-sm outline-none transition-colors ${
+                      usernameStatus === 'available' ? 'border-green-500' :
+                      usernameStatus === 'taken' || usernameStatus === 'invalid' ? 'border-red-500/60' :
+                      'border-white/10 focus:border-[#f3a5bc]'
+                    }`}
                   />
                 </div>
-              ))}
+                <p className={`text-xs mt-1.5 ml-1 ${
+                  usernameStatus === 'available' ? 'text-green-400' :
+                  usernameStatus === 'taken' ? 'text-red-400' :
+                  usernameStatus === 'invalid' ? 'text-red-400/70' :
+                  usernameStatus === 'checking' ? 'text-[#f0f0ee]/30' : 'text-[#f0f0ee]/20'
+                }`}>
+                  {usernameStatus === 'available' && '✓ Available'}
+                  {usernameStatus === 'taken' && '✗ Already taken — try another'}
+                  {usernameStatus === 'invalid' && 'Letters, numbers, dots, underscores only (3–30 chars)'}
+                  {usernameStatus === 'checking' && 'Checking…'}
+                  {usernameStatus === 'idle' && 'oocm.in/@yourname'}
+                </p>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password}
+                  onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                  placeholder="Set a password"
+                  className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] pr-12"
+                />
+                <button type="button" onClick={() => setShowPassword(s => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#f0f0ee]/30 hover:text-[#f0f0ee]/60 text-xs">
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={form.confirmPassword}
+                onChange={e => setForm(f => ({ ...f, confirmPassword: e.target.value }))}
+                placeholder="Confirm password"
+                className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc]"
+              />
             </div>
-            <p className="text-xs text-[#f0f0ee]/25 mt-3">More platforms (YouTube, TikTok, etc.) can be added from your profile settings.</p>
-            <button onClick={() => { setError(''); setStep(3) }}
-              className="w-full bg-[#f3a5bc] text-[#0a0a0a] font-semibold rounded-xl py-3.5 text-sm mt-5 hover:brightness-105 transition-all">
+            {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
+            <button onClick={() => {
+              if (!form.username || usernameStatus !== 'available') return err('Choose an available username.')
+              if (!form.password || form.password.length < 6) return err('Password must be at least 6 characters.')
+              if (form.password !== form.confirmPassword) return err('Passwords don\'t match.')
+              setError(''); setStep(3)
+            }} className="w-full bg-[#f3a5bc] text-[#0a0a0a] font-semibold rounded-xl py-3.5 text-sm mt-5 hover:brightness-105 transition-all">
               Continue
-            </button>
-            <button onClick={() => { setForm(f => ({ ...f, instagram_username: '' })); setStep(3) }}
-              className="w-full mt-3 text-[#f0f0ee]/30 text-sm py-2">
-              Skip for now
             </button>
           </div>
         )}

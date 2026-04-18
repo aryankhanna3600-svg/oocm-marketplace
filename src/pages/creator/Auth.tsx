@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { requestEmailOtp, verifyEmailOtp } from '../../api/auth'
+import { requestEmailOtp, verifyEmailOtp, loginWithPassword } from '../../api/auth'
 
 const SOCIALS = [
   {
@@ -56,13 +56,18 @@ const SOCIALS = [
 ]
 
 type Stage = 'entry' | 'otp'
+type LoginTab = 'otp' | 'password'
 
 export default function CreatorAuth() {
   const navigate = useNavigate()
   const [stage, setStage] = useState<Stage>('entry')
+  const [loginTab, setLoginTab] = useState<LoginTab>('otp')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
+  const [pwUsername, setPwUsername] = useState('')
+  const [pwPassword, setPwPassword] = useState('')
+  const [showPw, setShowPw] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [resendTimer, setResendTimer] = useState(0)
@@ -129,6 +134,21 @@ export default function CreatorAuth() {
     } finally { setLoading(false) }
   }
 
+  const handlePasswordLogin = async () => {
+    if (!pwUsername.trim()) return setError('Enter your username or email.')
+    if (!pwPassword) return setError('Enter your password.')
+    setLoading(true); setError('')
+    try {
+      const res = await loginWithPassword(pwUsername, pwPassword)
+      localStorage.setItem('oocm_token', res.data.token)
+      localStorage.setItem('oocm_role', 'creator')
+      localStorage.setItem('oocm_profile_complete', String(res.data.data?.profile_complete === true))
+      navigate('/creator/home')
+    } catch (e: any) {
+      setError(e.response?.data?.message ?? 'Login failed.')
+    } finally { setLoading(false) }
+  }
+
   const handleSocialClick = (id: string) => {
     if (id === 'instagram') {
       window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/instagram-login`
@@ -158,53 +178,98 @@ export default function CreatorAuth() {
             <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-2xl mb-1">
               For creators who<br />mean it.
             </h1>
-            <p className="text-[#f0f0ee]/40 text-sm mb-8">New or returning — enter your details to continue.</p>
+            <p className="text-[#f0f0ee]/40 text-sm mb-6">New or returning — enter your details to continue.</p>
 
-            <div className="space-y-3 mb-2">
-              <div className="flex gap-2">
-                <span className="bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f0f0ee]/50 shrink-0">+91</span>
-                <input
-                  type="tel" inputMode="numeric" maxLength={10}
-                  value={phone} onChange={e => setPhone(e.target.value.replace(/\D/g, ''))}
-                  placeholder="Mobile number"
-                  className="flex-1 bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] transition-colors"
-                />
-              </div>
-              <input
-                type="email" value={email} onChange={e => setEmail(e.target.value)}
-                placeholder="Email address"
-                className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] transition-colors"
-                onKeyDown={e => e.key === 'Enter' && sendOtp()}
-              />
-            </div>
-
-            {error && <p className="text-red-400 text-xs mt-2 mb-1">{error}</p>}
-
-            <button onClick={sendOtp} disabled={loading}
-              className="w-full bg-[#f3a5bc] text-[#0a0a0a] font-semibold rounded-xl py-3.5 text-sm mt-4 disabled:opacity-50 hover:brightness-105 transition-all">
-              {loading ? 'Sending code…' : 'Send verification code →'}
-            </button>
-
-            <div className="flex items-center gap-3 my-7">
-              <div className="flex-1 h-px bg-white/8" />
-              <span className="text-xs text-[#f0f0ee]/25">or connect with</span>
-              <div className="flex-1 h-px bg-white/8" />
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              {SOCIALS.map(s => (
-                <button key={s.id} onClick={() => handleSocialClick(s.id)}
-                  className="flex flex-col items-center gap-1.5 py-3 rounded-xl border border-white/8 hover:border-white/20 transition-all"
-                  style={{ background: s.bg }}>
-                  <span style={{ color: s.color }}>{s.icon}</span>
-                  <span className="text-[10px] text-[#f0f0ee]/50">{s.label}</span>
+            {/* Tab switcher */}
+            <div className="flex gap-1 bg-[#141414] rounded-xl p-1 mb-6">
+              {(['otp', 'password'] as LoginTab[]).map(tab => (
+                <button key={tab} onClick={() => { setLoginTab(tab); setError('') }}
+                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                    loginTab === tab ? 'bg-[#f3a5bc] text-[#0a0a0a]' : 'text-[#f0f0ee]/40 hover:text-[#f0f0ee]/70'
+                  }`}>
+                  {tab === 'otp' ? 'Email OTP' : 'Username & Password'}
                 </button>
               ))}
             </div>
 
-            <p className="text-center text-xs text-[#f0f0ee]/20 mt-8 leading-relaxed">
-              By continuing, you agree to our terms. Your phone number is your account identifier.
-            </p>
+            {/* Password login form */}
+            {loginTab === 'password' && (
+              <div className="space-y-3 mb-2">
+                <input
+                  value={pwUsername} onChange={e => setPwUsername(e.target.value)}
+                  placeholder="Username or email"
+                  className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] transition-colors"
+                  onKeyDown={e => e.key === 'Enter' && handlePasswordLogin()}
+                />
+                <div className="relative">
+                  <input
+                    type={showPw ? 'text' : 'password'}
+                    value={pwPassword} onChange={e => setPwPassword(e.target.value)}
+                    placeholder="Password"
+                    className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] transition-colors pr-14"
+                    onKeyDown={e => e.key === 'Enter' && handlePasswordLogin()}
+                  />
+                  <button type="button" onClick={() => setShowPw(s => !s)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#f0f0ee]/30 hover:text-[#f0f0ee]/60">
+                    {showPw ? 'Hide' : 'Show'}
+                  </button>
+                </div>
+                {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
+                <button onClick={handlePasswordLogin} disabled={loading}
+                  className="w-full bg-[#f3a5bc] text-[#0a0a0a] font-semibold rounded-xl py-3.5 text-sm mt-2 disabled:opacity-50 hover:brightness-105 transition-all">
+                  {loading ? 'Signing in…' : 'Sign in →'}
+                </button>
+                <p className="text-center text-xs text-[#f0f0ee]/20 mt-4">
+                  First time here? Switch to Email OTP to sign up.
+                </p>
+              </div>
+            )}
+
+            {/* OTP login form */}
+            {loginTab === 'otp' && (
+              <>
+                <div className="space-y-3 mb-2">
+                  <div className="flex gap-2">
+                    <span className="bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#f0f0ee]/50 shrink-0">+91</span>
+                    <input
+                      type="tel" inputMode="numeric" maxLength={10}
+                      value={phone} onChange={e => setPhone(e.target.value.replace(/\D/g, ''))}
+                      placeholder="Mobile number"
+                      className="flex-1 bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] transition-colors"
+                    />
+                  </div>
+                  <input
+                    type="email" value={email} onChange={e => setEmail(e.target.value)}
+                    placeholder="Email address"
+                    className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] transition-colors"
+                    onKeyDown={e => e.key === 'Enter' && sendOtp()}
+                  />
+                </div>
+                {error && <p className="text-red-400 text-xs mt-2 mb-1">{error}</p>}
+                <button onClick={sendOtp} disabled={loading}
+                  className="w-full bg-[#f3a5bc] text-[#0a0a0a] font-semibold rounded-xl py-3.5 text-sm mt-4 disabled:opacity-50 hover:brightness-105 transition-all">
+                  {loading ? 'Sending code…' : 'Send verification code →'}
+                </button>
+                <div className="flex items-center gap-3 my-7">
+                  <div className="flex-1 h-px bg-white/8" />
+                  <span className="text-xs text-[#f0f0ee]/25">or connect with</span>
+                  <div className="flex-1 h-px bg-white/8" />
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {SOCIALS.map(s => (
+                    <button key={s.id} onClick={() => handleSocialClick(s.id)}
+                      className="flex flex-col items-center gap-1.5 py-3 rounded-xl border border-white/8 hover:border-white/20 transition-all"
+                      style={{ background: s.bg }}>
+                      <span style={{ color: s.color }}>{s.icon}</span>
+                      <span className="text-[10px] text-[#f0f0ee]/50">{s.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-center text-xs text-[#f0f0ee]/20 mt-8 leading-relaxed">
+                  By continuing, you agree to our terms. Your phone number is your account identifier.
+                </p>
+              </>
+            )}
           </>
         )}
 
