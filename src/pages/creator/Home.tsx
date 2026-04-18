@@ -89,6 +89,20 @@ export default function CreatorHome() {
         </button>
       </div>
 
+      {/* Profile incomplete banner */}
+      {!creator.profile_complete && localStorage.getItem('oocm_profile_complete') !== 'true' && (
+        <button onClick={() => setShowProfileCompletion(true)}
+          className="mx-5 mt-2 mb-1 w-[calc(100%-40px)] bg-[#f3a5bc]/10 border border-[#f3a5bc]/30 rounded-2xl px-4 py-3 flex items-center justify-between text-left">
+          <div>
+            <p className="text-[#f3a5bc] text-sm font-semibold">Complete your profile</p>
+            <p className="text-[#f0f0ee]/40 text-xs mt-0.5">Brands need your details to shortlist you</p>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f3a5bc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      )}
+
       {/* Greeting */}
       <div className="px-5 pt-4 pb-6">
         <h1 className="font-heading font-bold text-2xl">
