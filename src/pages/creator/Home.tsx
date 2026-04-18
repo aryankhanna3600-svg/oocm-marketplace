@@ -37,7 +37,9 @@ export default function CreatorHome() {
       .then(r => {
         const d = r.data.data
         setData(d)
-        if (!d.creator.profile_complete) {
+        const localFlag = localStorage.getItem('oocm_profile_complete')
+        const isComplete = localFlag === 'true' || d.creator.profile_complete === true
+        if (!isComplete) {
           setShowProfileCompletion(true)
         }
       })
@@ -58,6 +60,7 @@ export default function CreatorHome() {
   const { creator, stats, matched_campaigns, match_count } = data
 
   const handleProfileComplete = (updatedCreator: any) => {
+    localStorage.setItem('oocm_profile_complete', 'true')
     setShowProfileCompletion(false)
     if (updatedCreator) {
       setData(d => d ? { ...d, creator: { ...d.creator, ...updatedCreator, profile_complete: true } } : d)

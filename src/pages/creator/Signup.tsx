@@ -73,6 +73,7 @@ export default function CreatorSignup() {
       doneRef.current = true
       localStorage.setItem('oocm_token', res.data.token)
       localStorage.setItem('oocm_role', 'creator')
+      localStorage.setItem('oocm_profile_complete', 'false')
       setStep(6)
       setTimeout(() => navigate('/creator/home'), 1800)
     } catch (e: any) {

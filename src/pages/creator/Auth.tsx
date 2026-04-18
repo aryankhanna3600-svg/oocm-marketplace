@@ -112,12 +112,14 @@ export default function CreatorAuth() {
     setLoading(true); setError('')
     try {
       const res = await verifyEmailOtp(email, finalOtp)
-      const { isNewUser, token, tempToken } = res.data
+      const { isNewUser, token, tempToken, data } = res.data
       if (!isNewUser && token) {
         localStorage.setItem('oocm_token', token)
         localStorage.setItem('oocm_role', 'creator')
+        localStorage.setItem('oocm_profile_complete', String(data?.profile_complete === true))
         navigate('/creator/home')
       } else {
+        localStorage.setItem('oocm_profile_complete', 'false')
         navigate('/creator/signup', { state: { phone, email, tempToken } })
       }
     } catch (e: any) {
