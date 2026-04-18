@@ -3,9 +3,21 @@ import { useNavigate } from 'react-router-dom'
 import { getCreatorHome } from '../../api/marketplace'
 import BottomNav from '../../components/BottomNav'
 import CampaignCard from '../../components/CampaignCard'
+import ProfileCompletion from '../../components/ProfileCompletion'
+
+interface CreatorData {
+  first_name: string
+  profile_image?: string
+  profile_complete: boolean
+  name?: string
+  email?: string
+  phone?: string
+  whatsapp?: string
+  instagram_username?: string
+}
 
 interface HomeData {
-  creator: { first_name: string; profile_image?: string }
+  creator: CreatorData
   stats: { total_earned: number; campaigns_done: number; rating: number | null }
   matched_campaigns: any[]
   match_count: number
@@ -15,13 +27,20 @@ export default function CreatorHome() {
   const navigate = useNavigate()
   const [data, setData] = useState<HomeData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [showProfileCompletion, setShowProfileCompletion] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('oocm_token')
     if (!token) { navigate('/creator/signup'); return }
 
     getCreatorHome()
-      .then(r => setData(r.data.data))
+      .then(r => {
+        const d = r.data.data
+        setData(d)
+        if (!d.creator.profile_complete) {
+          setShowProfileCompletion(true)
+        }
+      })
       .catch(() => { localStorage.removeItem('oocm_token'); navigate('/creator/signup') })
       .finally(() => setLoading(false))
   }, [])
@@ -38,7 +57,26 @@ export default function CreatorHome() {
 
   const { creator, stats, matched_campaigns, match_count } = data
 
+  const handleProfileComplete = (updatedCreator: any) => {
+    setShowProfileCompletion(false)
+    if (updatedCreator) {
+      setData(d => d ? { ...d, creator: { ...d.creator, ...updatedCreator, profile_complete: true } } : d)
+    }
+  }
+
   return (
+    <>
+    {showProfileCompletion && (
+      <ProfileCompletion
+        creatorData={{
+          name: creator.name,
+          email: creator.email,
+          phone: creator.phone,
+          instagram_username: creator.instagram_username,
+        }}
+        onComplete={handleProfileComplete}
+      />
+    )}
     <div className="min-h-screen bg-[#0a0a0a] text-[#f0f0ee] pb-24">
       {/* Top bar */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3">
@@ -102,5 +140,6 @@ export default function CreatorHome() {
 
       <BottomNav />
     </div>
+    </>
   )
 }

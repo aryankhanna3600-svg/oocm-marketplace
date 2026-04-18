@@ -74,6 +74,44 @@ const BRAND_PERKS = [
   },
 ]
 
+const BRANDS = [
+  'Pizza Hut', 'Plum', 'Lenskart', 'KFC', 'The Souled Store', 'Sunburn', 'Johnnie Walker',
+  'Swiss Beauty', 'ACKO', 'ITC Hotels', 'Nykaa', 'Michael Kors', 'One8 Commune',
+  'Bryan & Candy', 'Bioderma', 'Bewakoof', 'PVR Cinemas', 'Renee', 'House of Moksha',
+  'Pramila', 'LAVIE', 'Nature Derma', 'Geetanjali Salon', 'Bacardí', 'Room XO', 'MTV Splitsvilla',
+]
+
+const CAMPAIGNS = [
+  {
+    name: 'Rangverse',
+    type: 'Experiential',
+    desc: 'Not just a Holi event — a cultural moment. Creators, music, brands, experiences designed for social media.',
+    stats: [{ n: '50M+', l: 'social reach' }, { n: '1,200+', l: 'creators' }, { n: '10,000+', l: 'attendees' }],
+    color: '#f3a5bc',
+  },
+  {
+    name: 'Swiss Beauty',
+    type: 'Influencer Campaign',
+    desc: 'Large-scale campaign built for reach and consistency. The goal wasn\'t just visibility — it was dominance.',
+    stats: [{ n: '800', l: 'creators activated' }, { n: '23M+', l: 'annual reach' }, { n: '6,500+', l: 'influencers' }],
+    color: '#8fb78f',
+  },
+  {
+    name: 'PVR Cinemas',
+    type: 'Footfall Marketing',
+    desc: 'Movie campaigns, food & beverage promotions, theatre awareness. From awareness to actual visits.',
+    stats: [{ n: '3,400+', l: 'influencers' }, { n: '40M+', l: 'annual reach' }],
+    color: '#f3a5bc',
+  },
+  {
+    name: 'Plum',
+    type: 'Creator Growth',
+    desc: 'Monthly creator participation scaled from 300 to 1,000+. Not one viral campaign — a system that keeps delivering.',
+    stats: [{ n: '300→1K+', l: 'creators/month' }, { n: '25M+', l: 'annual reach' }],
+    color: '#8fb78f',
+  },
+]
+
 export default function Landing() {
   const navigate = useNavigate()
   const [toast, setToast] = useState(false)
@@ -85,6 +123,19 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#f0f0ee]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .marquee-track {
+          animation: marquee 35s linear infinite;
+          display: flex;
+          width: max-content;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+      `}</style>
 
       {/* Toast */}
       <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${toast ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3 pointer-events-none'}`}>
@@ -106,41 +157,32 @@ export default function Landing() {
             className="text-xs text-[#f0f0ee]/40 hover:text-[#f0f0ee]/70 transition-colors hidden sm:block">
             Team
           </a>
-          <button onClick={() => navigate('/creator/signup')}
+          <button onClick={() => navigate('/creator/auth')}
             className="text-xs bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-4 py-2 rounded-full hover:brightness-105 transition-all">
             Get started
           </button>
         </div>
       </nav>
 
-      {/* ── HERO — logo-forward, brand energy ── */}
+      {/* ── HERO ── */}
       <section className="relative overflow-hidden px-6 pt-20 pb-24 max-w-6xl mx-auto">
-        {/* Ghost background text */}
         <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-center overflow-hidden">
           <p style={{
-            fontFamily: "'Syne', sans-serif",
-            fontWeight: 900,
+            fontFamily: "'Syne', sans-serif", fontWeight: 900,
             fontSize: 'clamp(5rem, 18vw, 14rem)',
-            color: 'rgba(243,165,188,0.04)',
-            whiteSpace: 'nowrap',
-            letterSpacing: '-0.03em',
-            transform: 'rotate(-8deg)',
-            userSelect: 'none',
+            color: 'rgba(243,165,188,0.04)', whiteSpace: 'nowrap',
+            letterSpacing: '-0.03em', transform: 'rotate(-8deg)', userSelect: 'none',
           }}>
             OUT OF CONTEXT
           </p>
         </div>
 
         <div className="relative z-10 max-w-2xl">
-          {/* Brand mark */}
           <div className="mb-8">
             <p style={{
-              fontFamily: "'Playfair Display', serif",
-              fontStyle: 'italic',
-              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-              color: '#f3a5bc',
-              lineHeight: 1,
-              letterSpacing: '-0.02em',
+              fontFamily: "'Playfair Display', serif", fontStyle: 'italic',
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#f3a5bc',
+              lineHeight: 1, letterSpacing: '-0.02em',
             }}>
               :out\of\context
             </p>
@@ -148,7 +190,7 @@ export default function Landing() {
           </div>
 
           <span className="inline-block text-xs tracking-widest text-[#f3a5bc]/70 uppercase border border-[#f3a5bc]/20 rounded-full px-3 py-1 mb-6">
-            India's creator marketplace — coming soon
+            India's creator marketplace — now open
           </span>
 
           <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 'clamp(1.8rem, 4vw, 2.75rem)', lineHeight: 1.1 }} className="mb-5">
@@ -164,7 +206,7 @@ export default function Landing() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <button onClick={() => navigate('/creator/signup')}
+            <button onClick={() => navigate('/creator/auth')}
               className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-6 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2 w-fit">
               I'm a Creator →
             </button>
@@ -187,6 +229,25 @@ export default function Landing() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ── BRANDS MARQUEE ── */}
+      <section className="py-10 overflow-hidden border-b border-white/5">
+        <p className="text-center text-xs tracking-widest text-[#f0f0ee]/20 uppercase mb-6 px-6">
+          Brands our team has worked with
+        </p>
+        <div className="overflow-hidden">
+          <div className="marquee-track gap-10">
+            {[...BRANDS, ...BRANDS].map((b, i) => (
+              <span key={i} className="text-sm font-semibold text-[#f0f0ee]/35 whitespace-nowrap px-2">
+                {b}
+              </span>
+            ))}
+          </div>
+        </div>
+        <p className="text-center text-[10px] text-[#f0f0ee]/12 mt-5 px-6 tracking-wide">
+          And yes — your brand can be here next.
+        </p>
       </section>
 
       {/* ── CREATOR SHOWCASE ── */}
@@ -240,7 +301,6 @@ export default function Landing() {
             </a>
           </div>
 
-          {/* Phone screenshots */}
           <div className="flex gap-4 justify-center lg:justify-end">
             {['/deck-images/modacreator-1.jpg', '/deck-images/modacreator-2.jpg'].map((src, i) => (
               <div key={i} className={`w-[155px] sm:w-[165px] rounded-[2rem] overflow-hidden border-2 border-white/10 shadow-2xl shrink-0 ${i === 1 ? 'mt-8' : ''}`}>
@@ -276,7 +336,7 @@ export default function Landing() {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <button onClick={() => navigate('/creator/signup')}
+            <button onClick={() => navigate('/creator/auth')}
               className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all flex items-center gap-2">
               Join as Creator — it's free →
             </button>
@@ -316,14 +376,17 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── WORK — two HD images, stats overlaid ── */}
+      {/* ── WORK — images + campaign results ── */}
       <section className="px-6 py-20 bg-[#0d0d0d]">
         <div className="max-w-6xl mx-auto">
-          <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-10">Some of what we've done</p>
+          <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-2">Past work</p>
+          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.75rem', lineHeight: 1.2 }} className="mb-10">
+            Not promises.<br />
+            <span className="text-[#f3a5bc]">Actual campaigns. Actual results.</span>
+          </h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-            {/* Card 1 — Rangverse Holi */}
+          {/* Two HD image cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
             <div className="relative rounded-2xl overflow-hidden group" style={{ minHeight: '420px' }}>
               <img src="/deck-images/img-053.jpg" alt="Rangverse" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
@@ -341,7 +404,6 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Card 2 — Events collage */}
             <div className="relative rounded-2xl overflow-hidden group" style={{ minHeight: '420px' }}>
               <img src="/deck-images/img-120.jpg" alt="Events" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent" />
@@ -358,13 +420,29 @@ export default function Landing() {
                 </div>
               </div>
             </div>
-
           </div>
 
-          {/* Brand names strip */}
-          <div className="mt-6 flex flex-wrap gap-3">
-            {['Swiss Beauty', 'Bath & Body Works', 'PVR Cinemas', 'Casa Bacardi', 'Infamous', 'Rangverse', 'Michael Kors'].map(b => (
-              <span key={b} className="text-xs text-[#f0f0ee]/30 border border-white/5 px-3 py-1.5 rounded-full">{b}</span>
+          {/* Campaign result cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {CAMPAIGNS.map(c => (
+              <div key={c.name} className="bg-[#141414] rounded-2xl p-5 border border-white/5">
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <h4 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-sm">{c.name}</h4>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-medium shrink-0 whitespace-nowrap"
+                    style={{ background: c.color + '18', color: c.color }}>
+                    {c.type}
+                  </span>
+                </div>
+                <p className="text-[#f0f0ee]/35 text-xs leading-relaxed mb-4">{c.desc}</p>
+                <div className="space-y-2">
+                  {c.stats.map(s => (
+                    <div key={s.l} className="flex items-baseline gap-1.5">
+                      <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, color: c.color }} className="text-base">{s.n}</span>
+                      <span className="text-[#f0f0ee]/30 text-xs">{s.l}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -399,7 +477,6 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Right side — punchy stats */}
           <div className="grid grid-cols-2 gap-4">
             {[
               { value: '5 min', label: 'to post a brief', color: '#f3a5bc' },
@@ -420,26 +497,25 @@ export default function Landing() {
       <section className="px-6 py-20 bg-[#0d0d0d]">
         <div className="max-w-6xl mx-auto">
           <div className="bg-[#141414] rounded-3xl p-10 sm:p-14 flex flex-col sm:flex-row items-center justify-between gap-8 relative overflow-hidden">
-            {/* ghost text */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
               <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 900, fontSize: '8rem', color: 'rgba(243,165,188,0.03)', whiteSpace: 'nowrap', transform: 'rotate(-6deg)' }}>
                 OUT OF CONTEXT
               </p>
             </div>
             <div className="relative z-10">
-              <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-3">Join the waitlist</p>
+              <p className="text-xs tracking-widest text-[#f0f0ee]/30 uppercase mb-3">Creators. Culture. Impact.</p>
               <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.5rem' }} className="mb-2">
                 Let's build something<br />people won't scroll past.
               </h2>
               <p className="text-[#f0f0ee]/40 text-sm">Be among the first creators and brands on the platform.</p>
             </div>
-            <div className="flex flex-col gap-3 shrink-0 relative z-10">
-              <button onClick={() => navigate('/creator/signup')}
+            <div className="flex flex-col gap-3 shrink-0 relative z-10 w-full sm:w-auto">
+              <button onClick={() => navigate('/creator/auth')}
                 className="bg-[#f3a5bc] text-[#0a0a0a] font-semibold px-8 py-3 rounded-xl text-sm hover:brightness-105 transition-all whitespace-nowrap">
                 Join as Creator →
               </button>
               <button onClick={comingSoon}
-                className="bg-[#141414] border border-white/10 text-[#f0f0ee]/70 font-semibold px-8 py-3 rounded-xl text-sm hover:border-[#8fb78f]/40 hover:text-[#8fb78f] transition-all whitespace-nowrap flex items-center gap-2">
+                className="bg-[#141414] border border-white/10 text-[#f0f0ee]/70 font-semibold px-8 py-3 rounded-xl text-sm hover:border-[#8fb78f]/40 hover:text-[#8fb78f] transition-all whitespace-nowrap flex items-center justify-center gap-2">
                 Post a Campaign →
                 <span className="border border-[#8fb78f]/30 text-[#8fb78f]/60 text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full">Soon</span>
               </button>
