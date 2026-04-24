@@ -9,6 +9,7 @@ import CreatorCampaigns from './pages/creator/Campaigns'
 import CampaignDetail from './pages/creator/CampaignDetail'
 import CreatorMyWork from './pages/creator/MyWork'
 import CreatorProfile from './pages/creator/Profile'
+import CreatorDiscover from './pages/creator/Discover'
 import ContentSubmit from './pages/creator/ContentSubmit'
 import BrandSignup from './pages/brand/Signup'
 import BrandLogin from './pages/brand/Login'
@@ -18,6 +19,7 @@ import BrandCampaignNew from './pages/brand/CampaignNew'
 import BrandCampaignDetail from './pages/brand/CampaignDetail'
 import BrandCreators from './pages/brand/Creators'
 import BrandProfile from './pages/brand/Profile'
+import VerifyInstagram from './pages/creator/VerifyInstagram'
 
 export default function App() {
   return (
@@ -33,6 +35,8 @@ export default function App() {
           <Route path="/creator/my-work" element={<CreatorMyWork />} />
           <Route path="/creator/campaign/:id/submit" element={<ContentSubmit />} />
           <Route path="/creator/profile" element={<CreatorProfile />} />
+          <Route path="/creator/discover" element={<CreatorDiscover />} />
+          <Route path="/creator/verify-instagram" element={<VerifyInstagram />} />
           <Route path="/brand/signup" element={<BrandSignup />} />
           <Route path="/brand/login" element={<BrandLogin />} />
           <Route path="/brand/home" element={<BrandHome />} />
