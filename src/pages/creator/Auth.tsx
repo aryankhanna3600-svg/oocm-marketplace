@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { requestEmailOtp, verifyEmailOtp, loginWithPassword } from '../../api/auth'
+import { requestEmailOtp, verifyEmailOtp, loginWithPassword, forgotPassword, resetPassword } from '../../api/auth'
 
 const SOCIALS = [
   {
@@ -55,7 +55,7 @@ const SOCIALS = [
   },
 ]
 
-type Stage = 'entry' | 'otp'
+type Stage = 'entry' | 'otp' | 'forgot' | 'reset'
 type LoginTab = 'otp' | 'password'
 
 export default function CreatorAuth() {
@@ -68,10 +68,17 @@ export default function CreatorAuth() {
   const [pwUsername, setPwUsername] = useState('')
   const [pwPassword, setPwPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
+  const [forgotEmail, setForgotEmail] = useState('')
+  const [resetOtp, setResetOtp] = useState(['', '', '', '', '', ''])
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showNewPw, setShowNewPw] = useState(false)
+  const [successMsg, setSuccessMsg] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [resendTimer, setResendTimer] = useState(0)
   const otpRefs = useRef<(HTMLInputElement | null)[]>([])
+  const resetOtpRefs = useRef<(HTMLInputElement | null)[]>([])
   const timerRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
 
   useEffect(() => {
@@ -149,6 +156,49 @@ export default function CreatorAuth() {
     } finally { setLoading(false) }
   }
 
+  const handleForgotRequest = async () => {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(forgotEmail)) return setError('Enter a valid email address.')
+    setLoading(true); setError('')
+    try {
+      await forgotPassword(forgotEmail)
+      setStage('reset')
+      setResendTimer(60)
+      setTimeout(() => resetOtpRefs.current[0]?.focus(), 100)
+    } catch (e: any) {
+      setError(e.response?.data?.message ?? 'Failed to send reset code.')
+    } finally { setLoading(false) }
+  }
+
+  const handleResetOtpKey = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !resetOtp[i] && i > 0) resetOtpRefs.current[i - 1]?.focus()
+  }
+
+  const handleResetOtpChange = (i: number, val: string) => {
+    const digit = val.replace(/\D/g, '').slice(-1)
+    const next = [...resetOtp]; next[i] = digit
+    setResetOtp(next)
+    if (digit && i < 5) resetOtpRefs.current[i + 1]?.focus()
+  }
+
+  const handleResetPassword = async () => {
+    const code = resetOtp.join('')
+    if (code.length !== 6) return setError('Enter the 6-digit reset code.')
+    if (!newPassword || newPassword.length < 6) return setError('Password must be at least 6 characters.')
+    if (newPassword !== confirmPassword) return setError('Passwords do not match.')
+    setLoading(true); setError('')
+    try {
+      await resetPassword(forgotEmail, code, newPassword)
+      setStage('entry')
+      setLoginTab('password')
+      setPwUsername(forgotEmail)
+      setResetOtp(['', '', '', '', '', ''])
+      setNewPassword(''); setConfirmPassword('')
+      setSuccessMsg('Password updated! Sign in with your new password.')
+    } catch (e: any) {
+      setError(e.response?.data?.message ?? 'Failed to reset password.')
+    } finally { setLoading(false) }
+  }
+
   const handleSocialClick = (id: string) => {
     if (id === 'instagram') {
       window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/instagram-login`
@@ -163,9 +213,13 @@ export default function CreatorAuth() {
         <span style={{ fontFamily: "'Playfair Display', serif", fontStyle: 'italic', color: '#f3a5bc', fontSize: '1.1rem' }}>
           :out\of\context
         </span>
-        {stage === 'otp' && (
-          <button onClick={() => { setStage('entry'); setOtp(['','','','','','']); setError('') }}
-            className="text-xs text-[#f0f0ee]/40 hover:text-[#f0f0ee]/70">
+        {(stage === 'otp' || stage === 'forgot' || stage === 'reset') && (
+          <button onClick={() => {
+            if (stage === 'otp') { setStage('entry'); setOtp(['','','','','','']) }
+            if (stage === 'forgot') { setStage('entry'); setLoginTab('password') }
+            if (stage === 'reset') setStage('forgot')
+            setError('')
+          }} className="text-xs text-[#f0f0ee]/40 hover:text-[#f0f0ee]/70">
             ← Back
           </button>
         )}
@@ -219,13 +273,23 @@ export default function CreatorAuth() {
                   className="w-full bg-[#f3a5bc] text-[#0a0a0a] font-semibold rounded-xl py-3.5 text-sm mt-2 disabled:opacity-50 hover:brightness-105 transition-all">
                   {loading ? 'Signing in…' : 'Sign in →'}
                 </button>
-                <p className="text-center text-xs text-[#f0f0ee]/20 mt-4">
+                <button type="button" onClick={() => { setForgotEmail(pwUsername.includes('@') ? pwUsername : ''); setError(''); setSuccessMsg(''); setStage('forgot') }}
+                  className="w-full text-center text-xs text-[#f3a5bc]/50 hover:text-[#f3a5bc] mt-3 transition-colors">
+                  Forgot password?
+                </button>
+                <p className="text-center text-xs text-[#f0f0ee]/20 mt-2">
                   First time here? Switch to Email OTP to sign up.
                 </p>
               </div>
             )}
 
             {/* OTP login form */}
+            {successMsg && (
+              <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-3 mb-4">
+                <p className="text-green-400 text-sm">{successMsg}</p>
+              </div>
+            )}
+
             {loginTab === 'otp' && (
               <>
                 <div className="space-y-3 mb-2">
@@ -270,6 +334,93 @@ export default function CreatorAuth() {
                 </p>
               </>
             )}
+          </>
+        )}
+
+        {stage === 'forgot' && (
+          <>
+            <div className="mb-8">
+              <div className="w-10 h-10 rounded-2xl bg-[#f3a5bc]/10 flex items-center justify-center mb-5">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f3a5bc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+              <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-2xl mb-1">Reset password</h1>
+              <p className="text-[#f0f0ee]/40 text-sm">Enter your account email and we'll send a reset code.</p>
+            </div>
+            <input
+              type="email" value={forgotEmail} onChange={e => setForgotEmail(e.target.value)}
+              placeholder="your@email.com"
+              className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] mb-3"
+              onKeyDown={e => e.key === 'Enter' && handleForgotRequest()}
+            />
+            {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
+            <button onClick={handleForgotRequest} disabled={loading}
+              className="w-full bg-[#f3a5bc] text-[#0a0a0a] font-semibold rounded-xl py-3.5 text-sm disabled:opacity-50 hover:brightness-105 transition-all">
+              {loading ? 'Sending code…' : 'Send reset code →'}
+            </button>
+          </>
+        )}
+
+        {stage === 'reset' && (
+          <>
+            <div className="mb-8">
+              <div className="w-10 h-10 rounded-2xl bg-[#f3a5bc]/10 flex items-center justify-center mb-5">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f3a5bc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-2xl mb-1">Check your email</h1>
+              <p className="text-[#f0f0ee]/40 text-sm">
+                We sent a reset code to<br />
+                <span className="text-[#f0f0ee]/70">{forgotEmail}</span>
+              </p>
+            </div>
+            <div className="flex gap-2 mb-5 justify-between">
+              {resetOtp.map((digit, i) => (
+                <input key={i} ref={el => { resetOtpRefs.current[i] = el }}
+                  type="text" inputMode="numeric" maxLength={1} value={digit}
+                  onChange={e => handleResetOtpChange(i, e.target.value)}
+                  onKeyDown={e => handleResetOtpKey(i, e)}
+                  className="w-[calc(16.666%-6px)] aspect-square text-center text-lg font-bold bg-[#141414] border border-white/10 rounded-xl outline-none focus:border-[#f3a5bc] transition-colors"
+                />
+              ))}
+            </div>
+            <div className="space-y-3 mb-4">
+              <div className="relative">
+                <input type={showNewPw ? 'text' : 'password'} value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                  placeholder="New password (min 6 chars)"
+                  className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc] pr-14"
+                />
+                <button type="button" onClick={() => setShowNewPw(s => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#f0f0ee]/30 hover:text-[#f0f0ee]/60">
+                  {showNewPw ? 'Hide' : 'Show'}
+                </button>
+              </div>
+              <input type={showNewPw ? 'text' : 'password'} value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                className="w-full bg-[#141414] border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#f3a5bc]"
+                onKeyDown={e => e.key === 'Enter' && handleResetPassword()}
+              />
+            </div>
+            {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
+            <button onClick={handleResetPassword} disabled={loading}
+              className="w-full bg-[#f3a5bc] text-[#0a0a0a] font-semibold rounded-xl py-3.5 text-sm disabled:opacity-50 hover:brightness-105 transition-all">
+              {loading ? 'Updating password…' : 'Set new password →'}
+            </button>
+            <div className="text-center mt-4">
+              {resendTimer > 0 ? (
+                <p className="text-xs text-[#f0f0ee]/30">Resend in {resendTimer}s</p>
+              ) : (
+                <button onClick={handleForgotRequest} disabled={loading}
+                  className="text-xs text-[#f3a5bc]/70 hover:text-[#f3a5bc] transition-colors">
+                  Resend code
+                </button>
+              )}
+            </div>
           </>
         )}
 

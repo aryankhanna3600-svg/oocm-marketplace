@@ -27,16 +27,23 @@ function deadlineLabel(end: string | null) {
   return `${days} days left`
 }
 
-function brandInitial(name?: string) {
-  return (name ?? 'B').charAt(0).toUpperCase()
+const CAT_GRADIENTS: Record<string, string> = {
+  makeup:    'linear-gradient(135deg, #c97090 0%, #a0455a 100%)',
+  skincare:  'linear-gradient(135deg, #e8a0b0 0%, #c06478 100%)',
+  fashion:   'linear-gradient(135deg, #b06090 0%, #7a3060 100%)',
+  lifestyle: 'linear-gradient(135deg, #d480a0 0%, #a04070 100%)',
+  beauty:    'linear-gradient(135deg, #c87090 0%, #9a4565 100%)',
+  food:      'linear-gradient(135deg, #d4783c 0%, #a85020 100%)',
+  home:      'linear-gradient(135deg, #8096b8 0%, #506090 100%)',
+  fitness:   'linear-gradient(135deg, #5a9060 0%, #2e6538 100%)',
+  health:    'linear-gradient(135deg, #60a870 0%, #307040 100%)',
+  tech:      'linear-gradient(135deg, #6870c0 0%, #404898 100%)',
+  travel:    'linear-gradient(135deg, #3890b8 0%, #1060a0 100%)',
+  default:   'linear-gradient(135deg, #383858 0%, #202038 100%)',
 }
 
-const TIER_COLORS: Record<string, string> = {
-  '<1K': '#f3a5bc',
-  '1K–10K': '#f3a5bc',
-  '10K–50K': '#8fb78f',
-  '50K–200K': '#8fb78f',
-  '200K+': '#ffd580',
+function catGradient(cat: string) {
+  return CAT_GRADIENTS[cat?.toLowerCase()] ?? CAT_GRADIENTS.default
 }
 
 export default function CreatorCampaigns() {
@@ -67,32 +74,27 @@ export default function CreatorCampaigns() {
       setHasMore(more)
       setPage(pageNum)
     } catch {
-      // silently fail — empty state handles it
+      // silently fail
     } finally {
       setLoading(false)
       setInitialLoaded(true)
     }
   }, [category, platform, search])
 
-  // Reset + reload when filters change
   useEffect(() => {
     fetchPage(1, true)
   }, [fetchPage])
 
-  // Infinite scroll observer
   useEffect(() => {
     const el = loaderRef.current
     if (!el) return
     const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore && !loading) {
-        fetchPage(page + 1, false)
-      }
+      if (entries[0].isIntersecting && hasMore && !loading) fetchPage(page + 1, false)
     }, { threshold: 0.1 })
     observer.observe(el)
     return () => observer.disconnect()
   }, [hasMore, loading, page, fetchPage])
 
-  // Debounce search input
   const handleSearchInput = (val: string) => {
     setSearchInput(val)
     if (searchTimer.current) clearTimeout(searchTimer.current)
@@ -110,7 +112,7 @@ export default function CreatorCampaigns() {
               <path d="M12 4l-6 6 6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-lg">Campaigns</h1>
+          <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-lg">Discover</h1>
         </div>
 
         {/* Search */}
@@ -168,63 +170,120 @@ export default function CreatorCampaigns() {
         </div>
       </div>
 
-      {/* Campaign list */}
-      <div className="px-4 pt-4 space-y-3">
+      {/* Campaign cards */}
+      <div className="px-4 pt-4 space-y-4">
         {campaigns.map(c => {
-          const tierColor = TIER_COLORS[c.creator_tier] ?? '#f3a5bc'
           const deadline = deadlineLabel(c.timeline_end)
-          const deadlineUrgent = deadline.includes('day') && parseInt(deadline) <= 3
+          const isUrgent = deadline.includes('day') && parseInt(deadline) <= 3
+          const gradient = catGradient(c.category)
+          const brandInitial = (c.brand?.name ?? 'B').charAt(0).toUpperCase()
 
           return (
             <div
               key={c.id}
               onClick={() => navigate(`/creator/campaign/${c.id}`)}
-              className="bg-[#141414] rounded-2xl p-4 active:scale-[0.98] transition-transform cursor-pointer hover:bg-[#161616]"
+              className="rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-transform"
+              style={{
+                background: '#141414',
+                border: '0.5px solid rgba(255,255,255,0.08)',
+                boxShadow: isUrgent
+                  ? '0 0 0 1px rgba(243,165,188,0.15), 0 12px 32px -12px rgba(243,165,188,0.12)'
+                  : '0 8px 24px -12px rgba(0,0,0,0.5)',
+              }}
             >
-              <div className="flex items-start gap-3">
-                {/* Brand initial avatar */}
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 font-bold text-sm"
-                  style={{ background: tierColor + '25', color: tierColor }}>
-                  {brandInitial(c.brand?.name)}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-semibold text-sm leading-snug truncate">{c.name}</p>
-                      <p className="text-[#f0f0ee]/40 text-xs mt-0.5 truncate">{c.brand?.name ?? 'Brand'}</p>
-                    </div>
-                    <span className="text-sm font-bold shrink-0" style={{ color: tierColor }}>
-                      {c.budget}
-                    </span>
+              {/* Brand row */}
+              <div className="flex items-center justify-between px-4 pt-3.5 pb-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className="w-8 h-8 rounded-[10px] flex items-center justify-center text-[13px] font-bold shrink-0"
+                    style={{ background: gradient, color: 'white', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.15)' }}
+                  >
+                    {brandInitial}
                   </div>
-
-                  <p className="text-[#f0f0ee]/35 text-xs mt-2 line-clamp-2 leading-relaxed">{c.about}</p>
-
-                  <div className="flex items-center gap-2 mt-3 flex-wrap">
-                    {c.category && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-[#f0f0ee]/50">
-                        {c.category}
-                      </span>
-                    )}
-                    {c.platform && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-[#f0f0ee]/50">
-                        {c.platform}
-                      </span>
-                    )}
-                    {c.creator_tier && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                        style={{ background: tierColor + '18', color: tierColor }}>
-                        {c.creator_tier}
-                      </span>
-                    )}
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full ml-auto ${
-                      deadlineUrgent ? 'bg-red-500/15 text-red-400' : 'bg-white/5 text-[#f0f0ee]/40'
-                    }`}>
-                      ⏱ {deadline}
-                    </span>
+                  <div>
+                    <p className="text-sm font-semibold leading-none">{c.brand?.name ?? 'OOCM'}</p>
+                    <p className="text-[10px] text-[#f0f0ee]/40 uppercase tracking-wider mt-0.5 font-medium">{c.category}</p>
                   </div>
                 </div>
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg" style={{ background: 'rgba(243,165,188,0.08)', border: '0.5px solid rgba(243,165,188,0.18)' }}>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f3a5bc]" />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#f3a5bc]">Campaign</span>
+                </div>
+              </div>
+
+              {/* Hero gradient banner */}
+              <div className="mx-3 rounded-[14px] overflow-hidden relative" style={{ height: 180 }}>
+                <div className="absolute inset-0" style={{ background: gradient }} />
+                {/* Shine */}
+                <div className="absolute inset-0" style={{
+                  background: 'radial-gradient(120% 70% at 10% 10%, rgba(255,255,255,0.22) 0%, transparent 40%), radial-gradient(100% 60% at 90% 90%, rgba(0,0,0,0.25) 0%, transparent 50%)',
+                }} />
+                {/* Texture */}
+                <div className="absolute inset-0" style={{
+                  opacity: 0.07,
+                  backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 6px)',
+                }} />
+                {/* Budget badge */}
+                {c.budget && (
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1.5 rounded-[10px]"
+                    style={{ background: 'rgba(0,0,0,0.3)', border: '0.5px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(12px)' }}>
+                    <span className="text-[9px] uppercase tracking-[0.1em] text-white/65 font-semibold">Budget</span>
+                    <span className="text-sm font-bold text-white" style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-0.01em' }}>{c.budget}</span>
+                  </div>
+                )}
+                {/* Campaign name */}
+                <div className="absolute bottom-0 left-0 right-0 p-4" style={{
+                  fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 22, color: 'white',
+                  lineHeight: 1.1, letterSpacing: '-0.015em',
+                  textShadow: '0 2px 16px rgba(0,0,0,0.25)',
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 100%)',
+                }}>
+                  {c.name}
+                </div>
+              </div>
+
+              {/* Description */}
+              {c.about && (
+                <p className="px-4 pt-3 text-[13.5px] leading-relaxed text-[#f0f0ee]/72 line-clamp-2">{c.about}</p>
+              )}
+
+              {/* Meta pills */}
+              <div className="flex items-center gap-2.5 px-4 pt-2.5 flex-wrap">
+                {c.platform && (
+                  <span className="flex items-center gap-1.5 text-[11px] px-2 py-1 rounded-[7px] font-medium"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.07)', color: 'rgba(240,240,238,0.6)' }}>
+                    {c.platform}
+                  </span>
+                )}
+                {c.creator_tier && (
+                  <span className="flex items-center gap-1.5 text-[11px] px-2 py-1 rounded-[7px] font-medium"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '0.5px solid rgba(255,255,255,0.07)', color: 'rgba(240,240,238,0.6)' }}>
+                    {c.creator_tier}
+                  </span>
+                )}
+                <span className={`flex items-center gap-1 text-[11px] font-semibold ml-auto ${isUrgent ? 'text-[#f3a5bc]' : 'text-[#f0f0ee]/40'}`}>
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                    <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.2"/>
+                    <path d="M6 3.5V6l2 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                  </svg>
+                  {deadline}
+                </span>
+              </div>
+
+              {/* CTA */}
+              <div className="px-4 py-3 mt-0.5">
+                <button
+                  onClick={e => { e.stopPropagation(); navigate(`/creator/campaign/${c.id}`) }}
+                  className="w-full h-11 rounded-xl font-bold text-[14px] text-[#0a0a0a] transition-all active:scale-[0.97]"
+                  style={{
+                    background: '#f3a5bc',
+                    boxShadow: '0 8px 24px -8px rgba(243,165,188,0.5), inset 0 1px 0 rgba(255,255,255,0.3)',
+                    fontFamily: "'DM Sans', sans-serif",
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  Apply Now
+                </button>
               </div>
             </div>
           )
@@ -241,17 +300,21 @@ export default function CreatorCampaigns() {
 
         {/* Loading skeleton */}
         {loading && campaigns.length === 0 && (
-          <div className="space-y-3">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="bg-[#141414] rounded-2xl p-4 animate-pulse">
-                <div className="flex gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-white/5" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-3.5 bg-white/5 rounded w-2/3" />
-                    <div className="h-3 bg-white/5 rounded w-1/3" />
-                    <div className="h-3 bg-white/5 rounded w-full mt-2" />
-                    <div className="h-3 bg-white/5 rounded w-4/5" />
+          <div className="space-y-4">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="bg-[#141414] rounded-2xl overflow-hidden animate-pulse">
+                <div className="flex items-center gap-2.5 px-4 pt-3.5 pb-2.5">
+                  <div className="w-8 h-8 rounded-[10px] bg-white/5" />
+                  <div className="space-y-1.5">
+                    <div className="h-3 bg-white/5 rounded w-24" />
+                    <div className="h-2.5 bg-white/5 rounded w-16" />
                   </div>
+                </div>
+                <div className="mx-3 rounded-[14px] bg-white/5" style={{ height: 180 }} />
+                <div className="px-4 pt-3 pb-4 space-y-2">
+                  <div className="h-3 bg-white/5 rounded w-full" />
+                  <div className="h-3 bg-white/5 rounded w-4/5" />
+                  <div className="h-10 bg-white/5 rounded-xl mt-3" />
                 </div>
               </div>
             ))}

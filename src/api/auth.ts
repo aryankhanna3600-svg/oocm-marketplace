@@ -27,3 +27,9 @@ export const checkUsername = (username: string) =>
 
 export const loginWithPassword = (username: string, password: string) =>
   client.post('/auth/creator/login-password', { username, password })
+
+export const forgotPassword = (email: string) =>
+  client.post('/auth/creator/forgot-password', { email })
+
+export const resetPassword = (email: string, otp: string, newPassword: string) =>
+  client.post('/auth/creator/reset-password', { email, otp, newPassword })

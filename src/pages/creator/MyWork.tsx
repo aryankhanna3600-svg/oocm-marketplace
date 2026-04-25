@@ -5,7 +5,6 @@ import { getMyWork } from '../../api/marketplace'
 
 const TABS = [
   { key: 'pending', label: 'Applied' },
-  { key: 'shortlisted', label: 'Shortlisted' },
   { key: 'active', label: 'Active' },
   { key: 'completed', label: 'Completed' },
   { key: 'rejected', label: 'Rejected' },
@@ -79,7 +78,7 @@ export default function CreatorMyWork() {
 
   const current = grouped[activeTab] ?? []
 
-  const totalActive = (grouped.shortlisted?.length ?? 0) + (grouped.active?.length ?? 0)
+  const totalActive = grouped.active?.length ?? 0
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#f0f0ee] pb-28" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -146,11 +145,10 @@ export default function CreatorMyWork() {
         {!loading && current.length === 0 && (
           <div className="text-center py-20">
             <p className="text-3xl mb-3">
-              {activeTab === 'pending' ? '📋' : activeTab === 'shortlisted' ? '⭐' : activeTab === 'active' ? '🎬' : activeTab === 'completed' ? '✅' : '😔'}
+              {activeTab === 'pending' ? '📋' : activeTab === 'active' ? '🎬' : activeTab === 'completed' ? '✅' : '😔'}
             </p>
             <p className="text-[#f0f0ee]/40 text-sm">
               {activeTab === 'pending' ? 'No applications yet.' :
-               activeTab === 'shortlisted' ? 'Nothing shortlisted yet.' :
                activeTab === 'active' ? 'No active campaigns.' :
                activeTab === 'completed' ? 'No completed campaigns yet.' :
                'No rejections — keep applying!'}

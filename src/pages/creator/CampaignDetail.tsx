@@ -41,6 +41,24 @@ const TIER_COLORS: Record<string, string> = {
   '200K+': '#ffd580',
 }
 
+const CAT_GRADIENTS: Record<string, string> = {
+  makeup:    'linear-gradient(135deg, #c97090 0%, #a0455a 100%)',
+  skincare:  'linear-gradient(135deg, #e8a0b0 0%, #c06478 100%)',
+  fashion:   'linear-gradient(135deg, #b06090 0%, #7a3060 100%)',
+  lifestyle: 'linear-gradient(135deg, #d480a0 0%, #a04070 100%)',
+  beauty:    'linear-gradient(135deg, #c87090 0%, #9a4565 100%)',
+  food:      'linear-gradient(135deg, #d4783c 0%, #a85020 100%)',
+  home:      'linear-gradient(135deg, #8096b8 0%, #506090 100%)',
+  fitness:   'linear-gradient(135deg, #5a9060 0%, #2e6538 100%)',
+  health:    'linear-gradient(135deg, #60a870 0%, #307040 100%)',
+  tech:      'linear-gradient(135deg, #6870c0 0%, #404898 100%)',
+  travel:    'linear-gradient(135deg, #3890b8 0%, #1060a0 100%)',
+  default:   'linear-gradient(135deg, #383858 0%, #202038 100%)',
+}
+function catGradient(cat: string) {
+  return CAT_GRADIENTS[cat?.toLowerCase()] ?? CAT_GRADIENTS.default
+}
+
 export default function CampaignDetail() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -101,11 +119,12 @@ export default function CampaignDetail() {
 
   const { campaign, brand_campaigns } = data
   const tierColor = TIER_COLORS[campaign.creator_tier] ?? '#f3a5bc'
+  const gradient = catGradient(campaign.category)
   const dosList = campaign.dos ? campaign.dos.split('\n').filter(Boolean) : []
   const dontsList = campaign.donts ? campaign.donts.split('\n').filter(Boolean) : []
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#f0f0ee] pb-28" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-screen bg-[#0a0a0a] text-[#f0f0ee] pb-32" style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
       {/* Apply modal */}
       {showModal && (
@@ -154,57 +173,60 @@ export default function CampaignDetail() {
         </div>
       )}
 
-      {/* Top bar */}
-      <div className="sticky top-0 z-10 bg-[#0a0a0a]/95 backdrop-blur border-b border-white/5 flex items-center gap-3 px-4 py-4">
-        <button onClick={() => navigate(-1)} className="text-[#f0f0ee]/40 hover:text-[#f0f0ee]/80 transition-colors p-1">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M12 4l-6 6 6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+      {/* Gradient hero */}
+      <div className="relative" style={{ height: 280 }}>
+        <div className="absolute inset-0" style={{ background: gradient }} />
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(120% 70% at 10% 10%, rgba(255,255,255,0.2) 0%, transparent 40%), radial-gradient(100% 60% at 90% 90%, rgba(0,0,0,0.3) 0%, transparent 50%)',
+        }} />
+        <div className="absolute inset-0" style={{
+          opacity: 0.06,
+          backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.5) 0px, rgba(255,255,255,0.5) 1px, transparent 1px, transparent 6px)',
+        }} />
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32" style={{ background: 'linear-gradient(to top, #0a0a0a 0%, transparent 100%)' }} />
+
+        {/* Back button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-4 left-4 w-9 h-9 rounded-full flex items-center justify-center transition-colors z-10"
+          style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(8px)', border: '0.5px solid rgba(255,255,255,0.15)' }}
+        >
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M12 4l-6 6 6 6" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
-        <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }} className="text-base truncate">{campaign.name}</span>
+
+        {/* Budget badge */}
+        {campaign.budget && (
+          <div className="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1.5 rounded-[10px]"
+            style={{ background: 'rgba(0,0,0,0.3)', border: '0.5px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(12px)' }}>
+            <span className="text-[9px] uppercase tracking-[0.1em] text-white/65 font-semibold">Budget</span>
+            <span className="text-sm font-bold text-white" style={{ fontFamily: "'Syne', sans-serif" }}>{campaign.budget}</span>
+          </div>
+        )}
+
+        {/* Brand + Campaign name */}
+        <div className="absolute bottom-5 left-0 right-0 px-5">
+          <p className="text-white/65 text-sm font-medium mb-1">{campaign.brand?.name ?? 'OOCM'}</p>
+          <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.6rem', lineHeight: 1.1, letterSpacing: '-0.02em', color: 'white', textShadow: '0 2px 16px rgba(0,0,0,0.2)' }}>
+            {campaign.name}
+          </h1>
+        </div>
       </div>
 
-      {/* Hero */}
-      <div className="px-4 pt-5 pb-4 border-b border-white/5">
-        <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 text-xl font-bold"
-            style={{ background: tierColor + '20', color: tierColor }}>
-            {(campaign.brand?.name ?? 'B').charAt(0).toUpperCase()}
+      {/* Stats row */}
+      <div className="grid grid-cols-3 gap-2 px-4 pt-1 pb-4 border-b border-white/5">
+        {[
+          { label: 'Deadline', value: deadlineLabel(campaign.timeline_end) },
+          { label: 'Platform', value: campaign.platform ?? '—' },
+          { label: 'Tier', value: campaign.creator_tier ?? 'Open' },
+        ].map(s => (
+          <div key={s.label} className="bg-[#141414] rounded-xl px-3 py-2.5 text-center">
+            <p className="text-[#f0f0ee]/35 text-[10px] uppercase tracking-wider mb-1">{s.label}</p>
+            <p className="font-semibold text-xs">{s.value}</p>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-semibold text-sm text-[#f0f0ee]/60">{campaign.brand?.name ?? 'Brand'}</p>
-            <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '1.2rem', lineHeight: 1.2 }} className="mt-0.5">
-              {campaign.name}
-            </h1>
-          </div>
-        </div>
-
-        {/* Stats row */}
-        <div className="grid grid-cols-3 gap-2 mt-4">
-          {[
-            { label: 'Budget', value: campaign.budget ?? '—' },
-            { label: 'Deadline', value: deadlineLabel(campaign.timeline_end) },
-            { label: 'Platform', value: campaign.platform ?? '—' },
-          ].map(s => (
-            <div key={s.label} className="bg-[#141414] rounded-xl px-3 py-2.5 text-center">
-              <p className="text-[#f0f0ee]/35 text-[10px] uppercase tracking-wider mb-1">{s.label}</p>
-              <p className="font-semibold text-xs">{s.value}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Tags */}
-        <div className="flex gap-2 mt-3 flex-wrap">
-          {campaign.category && (
-            <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 text-[#f0f0ee]/50">{campaign.category}</span>
-          )}
-          {campaign.creator_tier && (
-            <span className="text-xs px-2.5 py-1 rounded-full font-medium"
-              style={{ background: tierColor + '18', color: tierColor }}>
-              {campaign.creator_tier}
-            </span>
-          )}
-        </div>
+        ))}
       </div>
 
       {/* Tabs */}
